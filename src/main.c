@@ -67,7 +67,7 @@ int main (){
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_RESIZABLE);
 
-  Window window = {1280, 800};
+  Window window = {1920, 1080};
   window.centrox = window.width/2;
   window.centroy = window.height/2;
   strcpy(window.name, "Prime Visualizer");
@@ -115,10 +115,10 @@ int main (){
   float currentLimit = 0;
   char PPSlock = 0;
   float primesPerSecond = 0;
-  char showStats = 1;
-  char showControls = 1;
-  char showFPS = 1;
-  char showCursor = 1;
+  char showStats = 0;
+  char showControls = 0;
+  char showFPS = 0;
+  char showCursor = 0;
 
   // What multiples will be drawn. 0 = primes, any number is valid
   unsigned int divMode = 0;
