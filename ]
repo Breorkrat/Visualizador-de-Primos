@@ -1,4 +1,5 @@
 module;
+#include <iostream>
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
@@ -281,10 +282,14 @@ void Renderer::DrawPoints(const std::vector<NumberPoint> &points,
   // Implementation using raw vertices for performance
   // Uses quads for rendering close ups, and lines for far away visualization
   bool isFarAway = (impl->camera.zoom < 0.5f);
-  if (isFarAway)
+  if (isFarAway) {
     rlBegin(RL_LINES);
-  else
+    std::cout << "lines" << endl;
+  } else {
     rlBegin(RL_QUADS);
+    std::cout << "quads" << endl;
+  }
+  rlBegin(RL_LINES);
 
   for (int i = startIdx; i < limitIdx; i += step) {
     if (points[i].p > rMax)
@@ -318,7 +323,7 @@ void Renderer::DrawPoints(const std::vector<NumberPoint> &points,
 
     if (isFarAway) {
       rlVertex2f(pos.x, pos.y);
-      rlVertex2f(pos.x + dotScale, pos.y);
+      rlVertex2f(pos.x + dotScale, pos.y + dotScale);
     } else {
       rlVertex2f(pos.x, pos.y);
       rlVertex2f(pos.x, pos.y + dotScale);
@@ -328,6 +333,107 @@ void Renderer::DrawPoints(const std::vector<NumberPoint> &points,
   }
 
   rlEnd();
+  // ==========================================
+
+  // Batch quads implementation
+  /*// Calcula o tamanho final da textura escalada
+  float texW = (float)impl->dot.width * dotScale;
+  float texH = (float)impl->dot.height * dotScale;
+
+  // ==========================================
+  // MODO RLGL MÁXIMA PERFORMANCE (BATCHING DIRETO)
+  // ==========================================
+
+  // 1. Vincula a textura na placa de vídeo uma única vez
+  rlSetTexture(impl->dot.id);
+
+  // 2. Avisa o OpenGL que vamos mandar um lote massivo de Quadrados (Quads)
+  rlBegin(RL_QUADS);
+
+  for (int i = startIdx; i < limitIdx; i += step) {
+    if (points[i].p > rMax)
+      break;
+
+    Vector2 pos = {(float)points[i].x, (float)points[i].y};
+    if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
+      continue;
+
+    Color drawColor = WHITE;
+    float distRatio = static_cast<float>(points[i].p) * invMaxP;
+
+    switch (state.colorMode) {
+    case ColorMode::Calculated:
+      drawColor = ColorFromHSV(points[i].hue, 0.8f, 1.0f);
+      break;
+    case ColorMode::Breathing:
+      drawColor = globalBreath;
+      break;
+    case ColorMode::CustomStatic:
+      drawColor = impl->customStatic;
+      break;
+    case ColorMode::CustomGradient:
+      drawColor = ColorLerp(impl->customGradientCenter,
+                            impl->customGradientEdge, distRatio);
+      break;
+    }
+
+    // --- INJEÇÃO DIRETA DE VÉRTICES ---
+    // Seta a cor desse quadrado (afeta os próximos 4 vértices)
+    rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+
+    // Topo-Esquerda
+    rlTexCoord2f(0.0f, 0.0f);
+    rlVertex2f(pos.x, pos.y);
+
+    // Baixo-Esquerda
+    rlTexCoord2f(0.0f, 1.0f);
+    rlVertex2f(pos.x, pos.y + texH);
+
+    // Baixo-Direita
+    rlTexCoord2f(1.0f, 1.0f);
+    rlVertex2f(pos.x + texW, pos.y + texH);
+
+    // Topo-Direita
+    rlTexCoord2f(1.0f, 0.0f);
+    rlVertex2f(pos.x + texW, pos.y);
+  }
+
+  // 3. Avisa a placa de vídeo que terminamos o lote
+  rlEnd();
+
+  // 4. Desvincula a textura (limpa o estado)
+  rlSetTexture(0);*/
+
+  // Texture implementation
+  /*for (int i = startIdx; i < limitIdx; i += step) {
+    if (points[i].p > rMax)
+      break;
+
+    Vector2 pos = {(float)points[i].x, (float)points[i].y};
+    if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
+      continue;
+
+    Color drawColor = WHITE;
+    float distRatio = static_cast<float>(points[i].p) * invMaxP;
+
+    switch (state.colorMode) {
+    case ColorMode::Calculated:
+      drawColor = ColorFromHSV(points[i].hue, 0.8f, 1.0f);
+      break;
+    case ColorMode::Breathing:
+      drawColor = globalBreath;
+      break;
+    case ColorMode::CustomStatic:
+      drawColor = impl->customStatic;
+      break;
+    case ColorMode::CustomGradient:
+      drawColor = ColorLerp(impl->customGradientCenter,
+                            impl->customGradientEdge, distRatio);
+      break;
+    }
+
+    DrawTextureEx(impl->dot, pos, 0.0f, dotScale, drawColor);
+  }*/
 
   EndMode2D();
 }

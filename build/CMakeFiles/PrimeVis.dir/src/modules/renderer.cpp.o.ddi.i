@@ -31162,6 +31162,434 @@ inline const Matrix& operator *= (Matrix& lhs, const Matrix& rhs)
     return lhs;
 }
 # 4 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
+# 1 "/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src/rlgl.h" 1
+# 381 "/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src/rlgl.h"
+typedef struct rlVertexBuffer {
+    int elementCount;
+
+    float *vertices;
+    float *texcoords;
+    float *normals;
+    unsigned char *colors;
+
+    unsigned int *indices;
+
+
+
+
+    unsigned int vaoId;
+    unsigned int vboId[5];
+} rlVertexBuffer;
+
+
+
+
+
+typedef struct rlDrawCall {
+    int mode;
+    int vertexCount;
+    int vertexAlignment;
+
+
+    unsigned int textureId;
+
+
+
+} rlDrawCall;
+
+
+typedef struct rlRenderBatch {
+    int bufferCount;
+    int currentBuffer;
+    rlVertexBuffer *vertexBuffer;
+
+    rlDrawCall *draws;
+    int drawCounter;
+    float currentDepth;
+} rlRenderBatch;
+
+
+typedef enum {
+    RL_OPENGL_11 = 1,
+    RL_OPENGL_21,
+    RL_OPENGL_33,
+    RL_OPENGL_43,
+    RL_OPENGL_ES_20,
+    RL_OPENGL_ES_30
+} rlGlVersion;
+
+
+
+typedef enum {
+    RL_LOG_ALL = 0,
+    RL_LOG_TRACE,
+    RL_LOG_DEBUG,
+    RL_LOG_INFO,
+    RL_LOG_WARNING,
+    RL_LOG_ERROR,
+    RL_LOG_FATAL,
+    RL_LOG_NONE
+} rlTraceLogLevel;
+
+
+
+typedef enum {
+    RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1,
+    RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA,
+    RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5,
+    RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8,
+    RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1,
+    RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4,
+    RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+    RL_PIXELFORMAT_UNCOMPRESSED_R32,
+    RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32,
+    RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32,
+    RL_PIXELFORMAT_UNCOMPRESSED_R16,
+    RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16,
+    RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16,
+    RL_PIXELFORMAT_COMPRESSED_DXT1_RGB,
+    RL_PIXELFORMAT_COMPRESSED_DXT1_RGBA,
+    RL_PIXELFORMAT_COMPRESSED_DXT3_RGBA,
+    RL_PIXELFORMAT_COMPRESSED_DXT5_RGBA,
+    RL_PIXELFORMAT_COMPRESSED_ETC1_RGB,
+    RL_PIXELFORMAT_COMPRESSED_ETC2_RGB,
+    RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA,
+    RL_PIXELFORMAT_COMPRESSED_PVRT_RGB,
+    RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA,
+    RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA,
+    RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA
+} rlPixelFormat;
+
+
+
+
+typedef enum {
+    RL_TEXTURE_FILTER_POINT = 0,
+    RL_TEXTURE_FILTER_BILINEAR,
+    RL_TEXTURE_FILTER_TRILINEAR,
+    RL_TEXTURE_FILTER_ANISOTROPIC_4X,
+    RL_TEXTURE_FILTER_ANISOTROPIC_8X,
+    RL_TEXTURE_FILTER_ANISOTROPIC_16X,
+} rlTextureFilter;
+
+
+typedef enum {
+    RL_BLEND_ALPHA = 0,
+    RL_BLEND_ADDITIVE,
+    RL_BLEND_MULTIPLIED,
+    RL_BLEND_ADD_COLORS,
+    RL_BLEND_SUBTRACT_COLORS,
+    RL_BLEND_ALPHA_PREMULTIPLY,
+    RL_BLEND_CUSTOM,
+    RL_BLEND_CUSTOM_SEPARATE
+} rlBlendMode;
+
+
+typedef enum {
+    RL_SHADER_LOC_VERTEX_POSITION = 0,
+    RL_SHADER_LOC_VERTEX_TEXCOORD01,
+    RL_SHADER_LOC_VERTEX_TEXCOORD02,
+    RL_SHADER_LOC_VERTEX_NORMAL,
+    RL_SHADER_LOC_VERTEX_TANGENT,
+    RL_SHADER_LOC_VERTEX_COLOR,
+    RL_SHADER_LOC_MATRIX_MVP,
+    RL_SHADER_LOC_MATRIX_VIEW,
+    RL_SHADER_LOC_MATRIX_PROJECTION,
+    RL_SHADER_LOC_MATRIX_MODEL,
+    RL_SHADER_LOC_MATRIX_NORMAL,
+    RL_SHADER_LOC_VECTOR_VIEW,
+    RL_SHADER_LOC_COLOR_DIFFUSE,
+    RL_SHADER_LOC_COLOR_SPECULAR,
+    RL_SHADER_LOC_COLOR_AMBIENT,
+    RL_SHADER_LOC_MAP_ALBEDO,
+    RL_SHADER_LOC_MAP_METALNESS,
+    RL_SHADER_LOC_MAP_NORMAL,
+    RL_SHADER_LOC_MAP_ROUGHNESS,
+    RL_SHADER_LOC_MAP_OCCLUSION,
+    RL_SHADER_LOC_MAP_EMISSION,
+    RL_SHADER_LOC_MAP_HEIGHT,
+    RL_SHADER_LOC_MAP_CUBEMAP,
+    RL_SHADER_LOC_MAP_IRRADIANCE,
+    RL_SHADER_LOC_MAP_PREFILTER,
+    RL_SHADER_LOC_MAP_BRDF
+} rlShaderLocationIndex;
+
+
+
+
+
+typedef enum {
+    RL_SHADER_UNIFORM_FLOAT = 0,
+    RL_SHADER_UNIFORM_VEC2,
+    RL_SHADER_UNIFORM_VEC3,
+    RL_SHADER_UNIFORM_VEC4,
+    RL_SHADER_UNIFORM_INT,
+    RL_SHADER_UNIFORM_IVEC2,
+    RL_SHADER_UNIFORM_IVEC3,
+    RL_SHADER_UNIFORM_IVEC4,
+    RL_SHADER_UNIFORM_UINT,
+    RL_SHADER_UNIFORM_UIVEC2,
+    RL_SHADER_UNIFORM_UIVEC3,
+    RL_SHADER_UNIFORM_UIVEC4,
+    RL_SHADER_UNIFORM_SAMPLER2D
+} rlShaderUniformDataType;
+
+
+typedef enum {
+    RL_SHADER_ATTRIB_FLOAT = 0,
+    RL_SHADER_ATTRIB_VEC2,
+    RL_SHADER_ATTRIB_VEC3,
+    RL_SHADER_ATTRIB_VEC4
+} rlShaderAttributeDataType;
+
+
+
+typedef enum {
+    RL_ATTACHMENT_COLOR_CHANNEL0 = 0,
+    RL_ATTACHMENT_COLOR_CHANNEL1 = 1,
+    RL_ATTACHMENT_COLOR_CHANNEL2 = 2,
+    RL_ATTACHMENT_COLOR_CHANNEL3 = 3,
+    RL_ATTACHMENT_COLOR_CHANNEL4 = 4,
+    RL_ATTACHMENT_COLOR_CHANNEL5 = 5,
+    RL_ATTACHMENT_COLOR_CHANNEL6 = 6,
+    RL_ATTACHMENT_COLOR_CHANNEL7 = 7,
+    RL_ATTACHMENT_DEPTH = 100,
+    RL_ATTACHMENT_STENCIL = 200,
+} rlFramebufferAttachType;
+
+
+typedef enum {
+    RL_ATTACHMENT_CUBEMAP_POSITIVE_X = 0,
+    RL_ATTACHMENT_CUBEMAP_NEGATIVE_X = 1,
+    RL_ATTACHMENT_CUBEMAP_POSITIVE_Y = 2,
+    RL_ATTACHMENT_CUBEMAP_NEGATIVE_Y = 3,
+    RL_ATTACHMENT_CUBEMAP_POSITIVE_Z = 4,
+    RL_ATTACHMENT_CUBEMAP_NEGATIVE_Z = 5,
+    RL_ATTACHMENT_TEXTURE2D = 100,
+    RL_ATTACHMENT_RENDERBUFFER = 200,
+} rlFramebufferAttachTextureType;
+
+
+typedef enum {
+    RL_CULL_FACE_FRONT = 0,
+    RL_CULL_FACE_BACK
+} rlCullMode;
+
+
+
+
+
+
+extern "C" {
+
+
+ void rlMatrixMode(int mode);
+ void rlPushMatrix(void);
+ void rlPopMatrix(void);
+ void rlLoadIdentity(void);
+ void rlTranslatef(float x, float y, float z);
+ void rlRotatef(float angle, float x, float y, float z);
+ void rlScalef(float x, float y, float z);
+ void rlMultMatrixf(const float *matf);
+ void rlFrustum(double left, double right, double bottom, double top, double znear, double zfar);
+ void rlOrtho(double left, double right, double bottom, double top, double znear, double zfar);
+ void rlViewport(int x, int y, int width, int height);
+ void rlSetClipPlanes(double nearPlane, double farPlane);
+ double rlGetCullDistanceNear(void);
+ double rlGetCullDistanceFar(void);
+
+
+
+
+ void rlBegin(int mode);
+ void rlEnd(void);
+ void rlVertex2i(int x, int y);
+ void rlVertex2f(float x, float y);
+ void rlVertex3f(float x, float y, float z);
+ void rlTexCoord2f(float x, float y);
+ void rlNormal3f(float x, float y, float z);
+ void rlColor4ub(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+ void rlColor3f(float x, float y, float z);
+ void rlColor4f(float x, float y, float z, float w);
+# 636 "/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src/rlgl.h"
+ bool rlEnableVertexArray(unsigned int vaoId);
+ void rlDisableVertexArray(void);
+ void rlEnableVertexBuffer(unsigned int id);
+ void rlDisableVertexBuffer(void);
+ void rlEnableVertexBufferElement(unsigned int id);
+ void rlDisableVertexBufferElement(void);
+ void rlEnableVertexAttribute(unsigned int index);
+ void rlDisableVertexAttribute(unsigned int index);
+
+
+
+
+
+
+ void rlActiveTextureSlot(int slot);
+ void rlEnableTexture(unsigned int id);
+ void rlDisableTexture(void);
+ void rlEnableTextureCubemap(unsigned int id);
+ void rlDisableTextureCubemap(void);
+ void rlTextureParameters(unsigned int id, int param, int value);
+ void rlCubemapParameters(unsigned int id, int param, int value);
+
+
+ void rlEnableShader(unsigned int id);
+ void rlDisableShader(void);
+
+
+ void rlEnableFramebuffer(unsigned int id);
+ void rlDisableFramebuffer(void);
+ unsigned int rlGetActiveFramebuffer(void);
+ void rlActiveDrawBuffers(int count);
+ void rlBlitFramebuffer(int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, int bufferMask);
+ void rlBindFramebuffer(unsigned int target, unsigned int framebuffer);
+
+
+ void rlEnableColorBlend(void);
+ void rlDisableColorBlend(void);
+ void rlEnableDepthTest(void);
+ void rlDisableDepthTest(void);
+ void rlEnableDepthMask(void);
+ void rlDisableDepthMask(void);
+ void rlEnableBackfaceCulling(void);
+ void rlDisableBackfaceCulling(void);
+ void rlColorMask(bool r, bool g, bool b, bool a);
+ void rlSetCullFace(int mode);
+ void rlEnableScissorTest(void);
+ void rlDisableScissorTest(void);
+ void rlScissor(int x, int y, int width, int height);
+ void rlEnableWireMode(void);
+ void rlEnablePointMode(void);
+ void rlDisableWireMode(void);
+ void rlSetLineWidth(float width);
+ float rlGetLineWidth(void);
+ void rlEnableSmoothLines(void);
+ void rlDisableSmoothLines(void);
+ void rlEnableStereoRender(void);
+ void rlDisableStereoRender(void);
+ bool rlIsStereoRenderEnabled(void);
+
+ void rlClearColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+ void rlClearScreenBuffers(void);
+ void rlCheckErrors(void);
+ void rlSetBlendMode(int mode);
+ void rlSetBlendFactors(int glSrcFactor, int glDstFactor, int glEquation);
+ void rlSetBlendFactorsSeparate(int glSrcRGB, int glDstRGB, int glSrcAlpha, int glDstAlpha, int glEqRGB, int glEqAlpha);
+
+
+
+
+
+ void rlglInit(int width, int height);
+ void rlglClose(void);
+ void rlLoadExtensions(void *loader);
+ int rlGetVersion(void);
+ void rlSetFramebufferWidth(int width);
+ int rlGetFramebufferWidth(void);
+ void rlSetFramebufferHeight(int height);
+ int rlGetFramebufferHeight(void);
+
+ unsigned int rlGetTextureIdDefault(void);
+ unsigned int rlGetShaderIdDefault(void);
+ int *rlGetShaderLocsDefault(void);
+
+
+
+
+ rlRenderBatch rlLoadRenderBatch(int numBuffers, int bufferElements);
+ void rlUnloadRenderBatch(rlRenderBatch batch);
+ void rlDrawRenderBatch(rlRenderBatch *batch);
+ void rlSetRenderBatchActive(rlRenderBatch *batch);
+ void rlDrawRenderBatchActive(void);
+ bool rlCheckRenderBatchLimit(int vCount);
+
+ void rlSetTexture(unsigned int id);
+
+
+
+
+ unsigned int rlLoadVertexArray(void);
+ unsigned int rlLoadVertexBuffer(const void *buffer, int size, bool dynamic);
+ unsigned int rlLoadVertexBufferElement(const void *buffer, int size, bool dynamic);
+ void rlUpdateVertexBuffer(unsigned int bufferId, const void *data, int dataSize, int offset);
+ void rlUpdateVertexBufferElements(unsigned int id, const void *data, int dataSize, int offset);
+ void rlUnloadVertexArray(unsigned int vaoId);
+ void rlUnloadVertexBuffer(unsigned int vboId);
+ void rlSetVertexAttribute(unsigned int index, int compSize, int type, bool normalized, int stride, int offset);
+ void rlSetVertexAttributeDivisor(unsigned int index, int divisor);
+ void rlSetVertexAttributeDefault(int locIndex, const void *value, int attribType, int count);
+ void rlDrawVertexArray(int offset, int count);
+ void rlDrawVertexArrayElements(int offset, int count, const void *buffer);
+ void rlDrawVertexArrayInstanced(int offset, int count, int instances);
+ void rlDrawVertexArrayElementsInstanced(int offset, int count, const void *buffer, int instances);
+
+
+ unsigned int rlLoadTexture(const void *data, int width, int height, int format, int mipmapCount);
+ unsigned int rlLoadTextureDepth(int width, int height, bool useRenderBuffer);
+ unsigned int rlLoadTextureCubemap(const void *data, int size, int format, int mipmapCount);
+ void rlUpdateTexture(unsigned int id, int offsetX, int offsetY, int width, int height, int format, const void *data);
+ void rlGetGlTextureFormats(int format, unsigned int *glInternalFormat, unsigned int *glFormat, unsigned int *glType);
+ const char *rlGetPixelFormatName(unsigned int format);
+ void rlUnloadTexture(unsigned int id);
+ void rlGenTextureMipmaps(unsigned int id, int width, int height, int format, int *mipmaps);
+ void *rlReadTexturePixels(unsigned int id, int width, int height, int format);
+ unsigned char *rlReadScreenPixels(int width, int height);
+
+
+ unsigned int rlLoadFramebuffer(void);
+ void rlFramebufferAttach(unsigned int fboId, unsigned int texId, int attachType, int texType, int mipLevel);
+ bool rlFramebufferComplete(unsigned int id);
+ void rlUnloadFramebuffer(unsigned int id);
+
+
+ unsigned int rlLoadShaderCode(const char *vsCode, const char *fsCode);
+ unsigned int rlCompileShader(const char *shaderCode, int type);
+ unsigned int rlLoadShaderProgram(unsigned int vShaderId, unsigned int fShaderId);
+ void rlUnloadShaderProgram(unsigned int id);
+ int rlGetLocationUniform(unsigned int shaderId, const char *uniformName);
+ int rlGetLocationAttrib(unsigned int shaderId, const char *attribName);
+ void rlSetUniform(int locIndex, const void *value, int uniformType, int count);
+ void rlSetUniformMatrix(int locIndex, Matrix mat);
+ void rlSetUniformMatrices(int locIndex, const Matrix *mat, int count);
+ void rlSetUniformSampler(int locIndex, unsigned int textureId);
+ void rlSetShader(unsigned int id, int *locs);
+
+
+ unsigned int rlLoadComputeShaderProgram(unsigned int shaderId);
+ void rlComputeShaderDispatch(unsigned int groupX, unsigned int groupY, unsigned int groupZ);
+
+
+ unsigned int rlLoadShaderBuffer(unsigned int size, const void *data, int usageHint);
+ void rlUnloadShaderBuffer(unsigned int ssboId);
+ void rlUpdateShaderBuffer(unsigned int id, const void *data, unsigned int dataSize, unsigned int offset);
+ void rlBindShaderBuffer(unsigned int id, unsigned int index);
+ void rlReadShaderBuffer(unsigned int id, void *dest, unsigned int count, unsigned int offset);
+ void rlCopyShaderBuffer(unsigned int destId, unsigned int srcId, unsigned int destOffset, unsigned int srcOffset, unsigned int count);
+ unsigned int rlGetShaderBufferSize(unsigned int id);
+
+
+ void rlBindImageTexture(unsigned int id, unsigned int index, int format, bool readonly);
+
+
+ Matrix rlGetMatrixModelview(void);
+ Matrix rlGetMatrixProjection(void);
+ Matrix rlGetMatrixTransform(void);
+ Matrix rlGetMatrixProjectionStereo(int eye);
+ Matrix rlGetMatrixViewOffsetStereo(int eye);
+ void rlSetMatrixProjection(Matrix proj);
+ void rlSetMatrixModelview(Matrix view);
+ void rlSetMatrixProjectionStereo(Matrix right, Matrix left);
+ void rlSetMatrixViewOffsetStereo(Matrix right, Matrix left);
+
+
+ void rlLoadDrawCube(void);
+ void rlLoadDrawQuad(void);
+
+
+}
+# 5 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
 
 # 1 "/usr/include/raygui.h" 1 3
 # 322 "/usr/include/raygui.h" 3
@@ -37317,7 +37745,7 @@ static Color GuiFade(Color color, float alpha)
 
     return result;
 }
-# 6 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
+# 7 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
 
 # 1 "/usr/include/c++/16.1.1/algorithm" 1 3
 # 63 "/usr/include/c++/16.1.1/algorithm" 3
@@ -51906,7 +52334,7 @@ lexicographical_compare(_ExecutionPolicy&& __exec, _ForwardIterator1 __first1, _
 
 }
 # 92 "/usr/include/c++/16.1.1/algorithm" 2 3
-# 8 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
+# 9 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
 
 # 1 "/usr/include/c++/16.1.1/string" 1 3
 # 44 "/usr/include/c++/16.1.1/string" 3
@@ -63813,7 +64241,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
 }
-# 10 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
+# 11 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
 # 1 "/usr/include/c++/16.1.1/vector" 1 3
 # 67 "/usr/include/c++/16.1.1/vector" 3
 # 1 "/usr/include/c++/16.1.1/bits/stl_uninitialized.h" 1 3
@@ -68856,9 +69284,9 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
 }
-# 11 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
+# 12 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp" 2
 
-# 11 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp"
+# 12 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp"
 module renderer;
 
 
@@ -69056,9 +69484,8 @@ void Renderer::ProcessInput(GameState &state, NumberGenerator &generator) {
       state.benchmarkMode = !state.benchmarkMode;
 
       if (state.benchmarkMode) {
+
         generator.Reset();
-
-
         generator.GeneratePrimesInRange(50000000);
 
 
@@ -69129,6 +69556,14 @@ void Renderer::DrawPoints(const std::vector<NumberPoint> &points,
                   IsKeyDown(KEY_D) || GetMouseWheelMove() != 0;
   int step = (isMoving && limitIdx > 100000) ? 5 : 1;
 
+
+
+  bool isFarAway = (impl->camera.zoom < 0.5f);
+  if (isFarAway)
+    rlBegin(0x0001);
+  else
+    rlBegin(0x0007);
+
   for (int i = startIdx; i < limitIdx; i += step) {
     if (points[i].p > rMax)
       break;
@@ -69156,9 +69591,22 @@ void Renderer::DrawPoints(const std::vector<NumberPoint> &points,
       break;
     }
 
-    DrawTextureEx(impl->dot, pos, 0.0f, dotScale, drawColor);
+
+    rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+
+    if (isFarAway) {
+      rlVertex2f(pos.x, pos.y);
+      rlVertex2f(pos.x + dotScale, pos.y);
+    } else {
+      rlVertex2f(pos.x, pos.y);
+      rlVertex2f(pos.x, pos.y + dotScale);
+      rlVertex2f(pos.x + dotScale, pos.y + dotScale);
+      rlVertex2f(pos.x + dotScale, pos.y);
+    }
   }
 
+  rlEnd();
+# 433 "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp"
   EndMode2D();
 }
 void Renderer::DrawUI(const std::vector<NumberPoint> &points,
