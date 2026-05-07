@@ -1,4 +1,0 @@
-$root .
-renderer CMakeFiles/PrimeVis.dir/renderer.gcm
-game_state CMakeFiles/PrimeVis.dir/game_state.gcm
-math_logic CMakeFiles/PrimeVis.dir/math_logic.gcm

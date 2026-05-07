@@ -19,9 +19,9 @@ project(raylib-populate NONE)
 
 include(ExternalProject)
 ExternalProject_Add(raylib-populate
-                     "UPDATE_DISCONNECTED" "False" "DOWNLOAD_EXTRACT_TIMESTAMP" "FALSE" "EXTERNALPROJECT_INTERNAL_ARGUMENT_SEPARATOR" "URL" "https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz"
-                    SOURCE_DIR          "/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src"
-                    BINARY_DIR          "/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-build"
+                     "UPDATE_DISCONNECTED" "False" "DOWNLOAD_EXTRACT_TIMESTAMP" "FALSE" "EXTERNALPROJECT_INTERNAL_ARGUMENT_SEPARATOR" "URL" "https://github.com/raysan5/raylib/archive/refs/tags/6.0.tar.gz"
+                    SOURCE_DIR          "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src"
+                    BINARY_DIR          "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""

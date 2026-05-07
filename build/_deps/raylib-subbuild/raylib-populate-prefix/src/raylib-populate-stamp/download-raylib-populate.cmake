@@ -22,14 +22,14 @@ function(check_file_hash has_hash hash_is_good)
   set("${has_hash}" TRUE PARENT_SCOPE)
 
   message(VERBOSE "verifying file...
-       file='/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz'")
+       file='/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz'")
 
-  file("" "/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz" actual_value)
+  file("" "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz" actual_value)
 
   if(NOT "${actual_value}" STREQUAL "")
     set("${hash_is_good}" FALSE PARENT_SCOPE)
     message(VERBOSE " hash of
-    /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz
+    /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz
   does not match expected value
     expected: ''
       actual: '${actual_value}'")
@@ -71,32 +71,32 @@ function(sleep_before_download attempt)
   execute_process(COMMAND "${CMAKE_COMMAND}" -E sleep "${sleep_seconds}")
 endfunction()
 
-if(EXISTS "/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz")
+if(EXISTS "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz")
   check_file_hash(has_hash hash_is_good)
   if(has_hash)
     if(hash_is_good)
       message(VERBOSE "File already exists and hash match (skip download):
-  file='/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz'
+  file='/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz'
   =''"
       )
       return()
     else()
       message(VERBOSE "File already exists but hash mismatch. Removing...")
-      file(REMOVE "/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz")
+      file(REMOVE "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz")
     endif()
   else()
     message(VERBOSE "File already exists but no hash specified (use URL_HASH):
-  file='/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz'
+  file='/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz'
 Old file will be removed and new file downloaded from URL."
     )
-    file(REMOVE "/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz")
+    file(REMOVE "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz")
   endif()
 endif()
 
 set(retry_number 5)
 
 message(VERBOSE "Downloading...
-   dst='/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz'
+   dst='/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz'
    timeout='none'
    inactivity timeout='none'"
 )
@@ -107,7 +107,7 @@ foreach(i RANGE ${retry_number})
   if(status_code IN_LIST download_retry_codes)
     sleep_before_download(${i})
   endif()
-  foreach(url IN ITEMS [====[https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz]====])
+  foreach(url IN ITEMS [====[https://github.com/raysan5/raylib/archive/refs/tags/6.0.tar.gz]====])
     if(NOT url IN_LIST skip_url_list)
       message(VERBOSE "Using src='${url}'")
 
@@ -119,7 +119,7 @@ foreach(i RANGE ${retry_number})
 
       file(
         DOWNLOAD
-        "${url}" "/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz"
+        "${url}" "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz"
         SHOW_PROGRESS
         # no TIMEOUT
         # no INACTIVITY_TIMEOUT
@@ -136,7 +136,7 @@ foreach(i RANGE ${retry_number})
         check_file_hash(has_hash hash_is_good)
         if(has_hash AND NOT hash_is_good)
           message(VERBOSE "Hash mismatch, removing...")
-          file(REMOVE "/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz")
+          file(REMOVE "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz")
         else()
           message(VERBOSE "Downloading... done")
           return()

@@ -1,4 +1,4 @@
-# Install script for directory: /home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src
+# Install script for directory: /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -43,14 +43,13 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-build/raylib/cmake_install.cmake")
-
+  # Include the install script for the subdirectory.
+  include("/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-build/raylib/cmake_install.cmake")
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-build/install_local_manifest.txt"
+  file(WRITE "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-build/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

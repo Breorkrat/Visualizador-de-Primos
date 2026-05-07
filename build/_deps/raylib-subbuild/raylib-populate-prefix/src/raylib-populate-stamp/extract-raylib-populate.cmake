@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION ${CMAKE_VERSION}) # this file comes with cmake
 
 # Make file names absolute:
 #
-get_filename_component(filename "/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/5.5.tar.gz" ABSOLUTE)
-get_filename_component(directory "/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src" ABSOLUTE)
+get_filename_component(filename "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/6.0.tar.gz" ABSOLUTE)
+get_filename_component(directory "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src" ABSOLUTE)
 
 message(VERBOSE "extracting...
      src='${filename}'

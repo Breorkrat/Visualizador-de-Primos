@@ -19,12 +19,12 @@
 			"destination" : null,
 			"include-directories" : 
 			[
-				"/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src",
-				"/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src/external/glfw/include"
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
 			],
 			"name" : "CXX_MODULES",
 			"relative-directory" : "",
-			"source" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/application.cppm",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/application.cppm",
 			"type" : "CXX_MODULES",
 			"visibility" : "PUBLIC"
 		},
@@ -41,12 +41,12 @@
 			"destination" : null,
 			"include-directories" : 
 			[
-				"/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src",
-				"/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src/external/glfw/include"
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
 			],
 			"name" : "CXX_MODULES",
 			"relative-directory" : "",
-			"source" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/game_state.cppm",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/game_state.cppm",
 			"type" : "CXX_MODULES",
 			"visibility" : "PUBLIC"
 		},
@@ -63,12 +63,12 @@
 			"destination" : null,
 			"include-directories" : 
 			[
-				"/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src",
-				"/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src/external/glfw/include"
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
 			],
 			"name" : "CXX_MODULES",
 			"relative-directory" : "",
-			"source" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/math_logic.cppm",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cppm",
 			"type" : "CXX_MODULES",
 			"visibility" : "PUBLIC"
 		},
@@ -85,52 +85,52 @@
 			"destination" : null,
 			"include-directories" : 
 			[
-				"/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src",
-				"/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-src/src/external/glfw/include"
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
 			],
 			"name" : "CXX_MODULES",
 			"relative-directory" : "",
-			"source" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cppm",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/renderer.cppm",
 			"type" : "CXX_MODULES",
 			"visibility" : "PUBLIC"
 		}
 	},
 	"database-info" : null,
-	"dir-cur-bld" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/build",
-	"dir-cur-src" : "/home/breorkrat/Documents/projetos/Prime-Visualizer",
-	"dir-top-bld" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/build",
-	"dir-top-src" : "/home/breorkrat/Documents/projetos/Prime-Visualizer",
+	"dir-cur-bld" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build",
+	"dir-cur-src" : "/home/breorkrat/Apps/Prime-Visualizer-CPP",
+	"dir-top-bld" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build",
+	"dir-top-src" : "/home/breorkrat/Apps/Prime-Visualizer-CPP",
 	"exports" : [],
 	"forward-modules-from-target-dirs" : [],
 	"include-dirs" : 
 	[
 		"_deps/raylib-src/src",
-		"_deps/raylib-src/src/external/glfw/include"
+		"_deps/raygui-src/src"
 	],
 	"language" : "CXX",
 	"linked-target-dirs" : [],
-	"module-dir" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/build/CMakeFiles/PrimeVis.dir",
+	"module-dir" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/PrimeVis.dir",
 	"sources" : 
 	{
 		"CMakeFiles/PrimeVis.dir/src/main.cpp.o" : 
 		{
 			"language" : "CXX",
-			"source" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/main.cpp"
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/main.cpp"
 		},
 		"CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o" : 
 		{
 			"language" : "CXX",
-			"source" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/application.cpp"
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/application.cpp"
 		},
 		"CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o" : 
 		{
 			"language" : "CXX",
-			"source" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/math_logic.cpp"
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cpp"
 		},
 		"CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o" : 
 		{
 			"language" : "CXX",
-			"source" : "/home/breorkrat/Documents/projetos/Prime-Visualizer/src/modules/renderer.cpp"
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/renderer.cpp"
 		}
 	}
 }

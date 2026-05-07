@@ -103,7 +103,7 @@ rule C_COMPILER__glfw_unscanned_
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake --regenerate-during-build -S/home/breorkrat/Documents/projetos/Prime-Visualizer -B/home/breorkrat/Documents/projetos/Prime-Visualizer/build
+  command = /usr/bin/cmake --regenerate-during-build -S/home/breorkrat/Apps/Prime-Visualizer-CPP -B/home/breorkrat/Apps/Prime-Visualizer-CPP/build
   description = Re-running CMake...
   generator = 1
 
@@ -112,7 +112,7 @@ rule RERUN_CMAKE
 # Rule for re-checking globbed directories.
 
 rule VERIFY_GLOBS
-  command = /usr/bin/cmake -P /home/breorkrat/Documents/projetos/Prime-Visualizer/build/CMakeFiles/VerifyGlobs.cmake
+  command = /usr/bin/cmake -P /home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/VerifyGlobs.cmake
   description = Re-checking globbed directories...
   generator = 1
 

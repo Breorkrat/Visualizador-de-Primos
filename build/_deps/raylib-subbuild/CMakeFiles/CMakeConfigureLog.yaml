@@ -23,14 +23,15 @@ events:
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
       - "/var/lib/flatpak/exports/bin/"
-      - "/usr/lib/jvm/default/bin/"
       - "/usr/bin/site_perl/"
       - "/usr/bin/vendor_perl/"
       - "/usr/bin/core_perl/"
       - "/home/breorkrat/scripts/"
       - "/home/breorkrat/scripts/drives/"
       - "/home/breorkrat/scripts/gpusr/"
+      - "/home/breorkrat/.local/bin/"
       - "/bin/"
     searched_directories:
       - "/usr/local/sbin/uname"
@@ -41,19 +42,20 @@ events:
         - "/usr/local/sbin"
         - "/usr/local/bin"
         - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
         - "/var/lib/flatpak/exports/bin"
-        - "/usr/lib/jvm/default/bin"
         - "/usr/bin/site_perl"
         - "/usr/bin/vendor_perl"
         - "/usr/bin/core_perl"
         - "/home/breorkrat/scripts"
         - "/home/breorkrat/scripts/drives"
         - "/home/breorkrat/scripts/gpusr"
+        - "/home/breorkrat/.local/bin"
   -
     kind: "message-v1"
     backtrace:
       - "/usr/share/cmake/Modules/CMakeDetermineSystem.cmake:212 (message)"
       - "CMakeLists.txt:16 (project)"
     message: |
-      The system is: Linux - 6.19.6-arch1-1 - x86_64
+      The system is: Linux - 7.0.3-zen1-2-zen - x86_64
 ...

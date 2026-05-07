@@ -10,8 +10,11 @@ set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
 # Raylib 5.0
 include(FetchContent)
-FetchContent_Declare(raylib URL https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz)
+FetchContent_Declare(raylib URL https://github.com/raysan5/raylib/archive/refs/tags/6.0.tar.gz)
 FetchContent_MakeAvailable(raylib)
+# Raygui 4.0
+FetchContent_Declare(raygui URL https://github.com/raysan5/raygui/archive/refs/tags/4.0.tar.gz)
+FetchContent_MakeAvailable(raygui)
 
 # Fetch .cppm files
 file(GLOB_RECURSE MODULE_FILES CONFIGURE_DEPENDS "src/modules/*.cppm")
@@ -31,3 +34,4 @@ target_sources(PrimeVis
 )
 
 target_link_libraries(PrimeVis PRIVATE raylib)
+target_include_directories(PrimeVis SYSTEM PRIVATE ${raygui_SOURCE_DIR}/src)

@@ -34,7 +34,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/
+cmake_ninja_workdir = /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/
 
 #############################################
 # Utility command for raylib-populate
@@ -46,7 +46,7 @@ build raylib-populate: phony CMakeFiles/raylib-populate CMakeFiles/raylib-popula
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild && /usr/bin/ccmake -S/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild -B/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild && /usr/bin/ccmake -S/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild -B/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -58,7 +58,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild && /usr/bin/cmake --regenerate-during-build -S/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild -B/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild && /usr/bin/cmake --regenerate-during-build -S/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild -B/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -76,7 +76,7 @@ build CMakeFiles/raylib-populate | ${cmake_ninja_workdir}CMakeFiles/raylib-popul
 # Custom command for CMakeFiles/raylib-populate-complete
 
 build CMakeFiles/raylib-populate-complete raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done | ${cmake_ninja_workdir}CMakeFiles/raylib-populate-complete ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done: CUSTOM_COMMAND raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test
-  COMMAND = cd /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild && /usr/bin/cmake -E make_directory /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/CMakeFiles && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/CMakeFiles/raylib-populate-complete && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild && /usr/bin/cmake -E make_directory /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/CMakeFiles && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/CMakeFiles/raylib-populate-complete && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done
   DESC = Completed 'raylib-populate'
   restat = 1
 
@@ -85,7 +85,7 @@ build CMakeFiles/raylib-populate-complete raylib-populate-prefix/src/raylib-popu
 # Custom command for raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build
 
 build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build | ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build: CUSTOM_COMMAND raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure
-  COMMAND = cd /home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-build && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-build && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build
   DESC = No build step for 'raylib-populate'
   restat = 1
 
@@ -94,7 +94,7 @@ build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build | $
 # Custom command for raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure
 
 build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure | ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure: CUSTOM_COMMAND raylib-populate-prefix/tmp/raylib-populate-cfgcmd.txt raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch
-  COMMAND = cd /home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-build && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-build && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure
   DESC = No configure step for 'raylib-populate'
   restat = 1
 
@@ -103,7 +103,7 @@ build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure
 # Custom command for raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download
 
 build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download | ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download: CUSTOM_COMMAND raylib-populate-prefix/src/raylib-populate-stamp/download-raylib-populate.cmake raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-urlinfo.txt raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir
-  COMMAND = cd /home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps && /usr/bin/cmake -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/download-raylib-populate.cmake && /usr/bin/cmake -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/verify-raylib-populate.cmake && /usr/bin/cmake -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/extract-raylib-populate.cmake && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps && /usr/bin/cmake -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/download-raylib-populate.cmake && /usr/bin/cmake -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/verify-raylib-populate.cmake && /usr/bin/cmake -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/extract-raylib-populate.cmake && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download
   DESC = Performing download step (download, verify and extract) for 'raylib-populate'
   pool = console
   restat = 1
@@ -113,7 +113,7 @@ build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download 
 # Custom command for raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install
 
 build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install | ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install: CUSTOM_COMMAND raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build
-  COMMAND = cd /home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-build && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-build && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install
   DESC = No install step for 'raylib-populate'
   restat = 1
 
@@ -122,7 +122,7 @@ build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install |
 # Custom command for raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir
 
 build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir | ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir: CUSTOM_COMMAND
-  COMMAND = cd /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild && /usr/bin/cmake -Dcfgdir= -P /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/tmp/raylib-populate-mkdirs.cmake && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild && /usr/bin/cmake -Dcfgdir= -P /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/tmp/raylib-populate-mkdirs.cmake && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir
   DESC = Creating directories for 'raylib-populate'
   restat = 1
 
@@ -131,7 +131,7 @@ build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir | $
 # Custom command for raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch
 
 build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch | ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch: CUSTOM_COMMAND raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch-info.txt raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update
-  COMMAND = cd /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch
   DESC = No patch step for 'raylib-populate'
   pool = console
   restat = 1
@@ -141,7 +141,7 @@ build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch | $
 # Custom command for raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test
 
 build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test | ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test: CUSTOM_COMMAND raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install
-  COMMAND = cd /home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-build && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-build && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test
   DESC = No test step for 'raylib-populate'
   restat = 1
 
@@ -150,7 +150,7 @@ build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test | ${
 # Custom command for raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update
 
 build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update | ${cmake_ninja_workdir}raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update: CUSTOM_COMMAND raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update-info.txt raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download
-  COMMAND = cd /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update
+  COMMAND = cd /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild && /usr/bin/cmake -E echo_append && /usr/bin/cmake -E touch /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update
   DESC = No update step for 'raylib-populate'
   pool = console
   restat = 1
@@ -164,14 +164,14 @@ build raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update | 
 # =============================================================================
 
 #############################################
-# Folder: /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild
+# Folder: /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild
 
 build codegen: phony
 
 # =============================================================================
 
 #############################################
-# Folder: /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild
+# Folder: /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild
 
 build all: phony raylib-populate
 
@@ -182,7 +182,7 @@ build all: phony raylib-populate
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja /mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/cmake_install.cmake: RERUN_CMAKE | /usr/share/cmake/Modules/CMakeDetermineSystem.cmake /usr/share/cmake/Modules/CMakeGenericSystem.cmake /usr/share/cmake/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake/Modules/CMakeSystem.cmake.in /usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake/Modules/ExternalProject.cmake /usr/share/cmake/Modules/ExternalProject/PatchInfo.txt.in /usr/share/cmake/Modules/ExternalProject/RepositoryInfo.txt.in /usr/share/cmake/Modules/ExternalProject/UpdateInfo.txt.in /usr/share/cmake/Modules/ExternalProject/cfgcmd.txt.in /usr/share/cmake/Modules/ExternalProject/download.cmake.in /usr/share/cmake/Modules/ExternalProject/extractfile.cmake.in /usr/share/cmake/Modules/ExternalProject/mkdirs.cmake.in /usr/share/cmake/Modules/ExternalProject/shared_internal_commands.cmake /usr/share/cmake/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake/Modules/Platform/Linux.cmake /usr/share/cmake/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/4.3.2/CMakeSystem.cmake CMakeLists.txt raylib-populate-prefix/tmp/raylib-populate-mkdirs.cmake
+build build.ninja /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/cmake_install.cmake: RERUN_CMAKE | /usr/share/cmake/Modules/CMakeDetermineSystem.cmake /usr/share/cmake/Modules/CMakeGenericSystem.cmake /usr/share/cmake/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake/Modules/CMakeSystem.cmake.in /usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake/Modules/ExternalProject.cmake /usr/share/cmake/Modules/ExternalProject/PatchInfo.txt.in /usr/share/cmake/Modules/ExternalProject/RepositoryInfo.txt.in /usr/share/cmake/Modules/ExternalProject/UpdateInfo.txt.in /usr/share/cmake/Modules/ExternalProject/cfgcmd.txt.in /usr/share/cmake/Modules/ExternalProject/download.cmake.in /usr/share/cmake/Modules/ExternalProject/extractfile.cmake.in /usr/share/cmake/Modules/ExternalProject/mkdirs.cmake.in /usr/share/cmake/Modules/ExternalProject/shared_internal_commands.cmake /usr/share/cmake/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake/Modules/Platform/Linux.cmake /usr/share/cmake/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/4.3.2/CMakeSystem.cmake CMakeLists.txt raylib-populate-prefix/tmp/raylib-populate-mkdirs.cmake
   pool = console
 
 

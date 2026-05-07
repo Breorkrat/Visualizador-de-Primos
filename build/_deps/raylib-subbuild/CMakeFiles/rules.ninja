@@ -23,7 +23,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake --regenerate-during-build -S/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild -B/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild
+  command = /usr/bin/cmake --regenerate-during-build -S/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild -B/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild
   description = Re-running CMake...
   generator = 1
 
