@@ -1,0 +1,3 @@
+/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/CMakeFiles/raylib-populate.dir
+/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/CMakeFiles/edit_cache.dir
+/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,24 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o",
+"provides": [
+{
+"logical-name": "renderer",
+"is-interface": true
+}
+],
+"requires": [
+{
+"logical-name": "game_state"
+}
+,
+{
+"logical-name": "math_logic"
+}
+]
+}
+],
+"version": 0,
+"revision": 0
+}

@@ -1,0 +1,29 @@
+module;
+#include <string>
+#include <vector>
+export module renderer;
+
+import game_state;
+import math_logic;
+
+export class Renderer {
+public:
+  Renderer(int width, int height, const std::string &title);
+  ~Renderer();
+
+  // Window lifecycle
+  bool WindowShouldClose() const;
+  float GetDeltaTime() const;
+  void BeginFrame();
+  void EndFrame();
+
+  // Isolated methods
+  void ProcessInput(GameState &state, NumberGenerator &generator);
+  void DrawUI(const std::vector<NumberPoint> &points, const GameState &state);
+  void DrawPoints(const std::vector<NumberPoint> &points,
+                  const GameState &state);
+
+private:
+  struct Impl; // PIMPL to hide raylib
+  Impl *impl;
+};

@@ -1,0 +1,21 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles/PrimeVis.dir/src/main.cpp.o: dyndep | CMakeFiles/PrimeVis.dir/application.gcm
+
+build CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o: dyndep | CMakeFiles/PrimeVis.dir/application.gcm
+
+build CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o: dyndep | CMakeFiles/PrimeVis.dir/math_logic.gcm
+
+build CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o: dyndep | CMakeFiles/PrimeVis.dir/renderer.gcm
+
+build CMakeFiles/PrimeVis.dir/src/modules/application.cppm.o | CMakeFiles/PrimeVis.dir/application.gcm: dyndep | CMakeFiles/PrimeVis.dir/math_logic.gcm CMakeFiles/PrimeVis.dir/game_state.gcm CMakeFiles/PrimeVis.dir/renderer.gcm
+  restat = 1
+
+build CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o | CMakeFiles/PrimeVis.dir/game_state.gcm: dyndep
+  restat = 1
+
+build CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o | CMakeFiles/PrimeVis.dir/math_logic.gcm: dyndep
+  restat = 1
+
+build CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o | CMakeFiles/PrimeVis.dir/renderer.gcm: dyndep | CMakeFiles/PrimeVis.dir/game_state.gcm CMakeFiles/PrimeVis.dir/math_logic.gcm
+  restat = 1
+

@@ -1,0 +1,21 @@
+# ninja log v7
+0	20	1778110142309587535	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir	8d5a1778fcfcad24
+0	20	1778110142309587535	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir	8d5a1778fcfcad24
+20	8398	1778110150687536842	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download	70d77ff3fecb1d97
+20	8398	1778110150687536842	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download	70d77ff3fecb1d97
+8398	8414	1778110150703536745	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update	9c76de9b919074d1
+8398	8414	1778110150703536745	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update	9c76de9b919074d1
+8414	8433	1778110150723536624	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch	2537fe0a0dd1206
+8414	8433	1778110150723536624	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch	2537fe0a0dd1206
+8433	8447	1778110150737536539	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure	9a6d35b12a050fe9
+8433	8447	1778110150737536539	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure	9a6d35b12a050fe9
+8447	8458	1778110150748536472	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build	e31b8651cd05bedc
+8447	8458	1778110150748536472	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build	e31b8651cd05bedc
+8458	8470	1778110150760536400	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install	359a0b6d4b96ef07
+8458	8470	1778110150760536400	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install	359a0b6d4b96ef07
+8470	8481	1778110150770536339	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test	fad7ba2103743518
+8470	8481	1778110150770536339	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test	fad7ba2103743518
+8481	8509	1778110150799536164	CMakeFiles/raylib-populate-complete	a6f19f7e058e98e0
+8481	8509	1778110150799536164	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done	a6f19f7e058e98e0
+8481	8509	1778110150799536164	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/CMakeFiles/raylib-populate-complete	a6f19f7e058e98e0
+8481	8509	1778110150799536164	/mnt/Fedora/home/breorkrat/Documents/projetos/Prime-Visualizer/build/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done	a6f19f7e058e98e0
