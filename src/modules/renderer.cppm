@@ -18,10 +18,9 @@ public:
   void EndFrame();
 
   // Isolated methods
-  void ProcessInput(GameState &state, NumberGenerator &generator);
   void DrawUI(const std::vector<NumberPoint> &points, const GameState &state);
-  void DrawPoints(const std::vector<NumberPoint> &points,
-                  const GameState &state);
+  void DrawScene(const std::vector<NumberPoint> &points,
+                 const GameState &state);
 
 private:
   struct Impl; // PIMPL to hide raylib

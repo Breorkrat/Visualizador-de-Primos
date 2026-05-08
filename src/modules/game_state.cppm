@@ -8,6 +8,13 @@ export enum class ColorMode {
   CustomGradient
 };
 
+export struct CameraState {
+  float x = 0.0f;
+  float y = 0.0f;
+  float zoom = 1.0f;
+  char zoomMode = 0; // 0: Cover, 1: Full, 2: Free
+};
+
 export struct GameState {
   float currentLimit = 0;
   float primesPerSecond = 500.0f;
@@ -21,6 +28,11 @@ export struct GameState {
   bool showControls = true;
   bool showFPS = false;
   bool showCursor = false;
-  int colorPickerVisible = 0; // 0 = Hidden, 1 = Static, 2 = Gradient
-  bool drawAsWeb = 0;
+  bool drawAsWeb = false;
+  int colorPickerVisible = 0; // 0 = Hidden, 1 = Solid, 2 = Gradient
+
+  CameraState camera;
+
+  char inputBuffer[16] = {0};
+  bool isTyping = false;
 };

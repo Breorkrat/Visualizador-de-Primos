@@ -6,6 +6,7 @@ file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "/home/breorkrat/Apps/Prime-Vi
 set(OLD_GLOB
   "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/main.cpp"
   "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/application.cpp"
+  "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cpp"
   "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cpp"
   "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/renderer.cpp"
   )
@@ -35,6 +36,7 @@ file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "/home/breorkrat/Apps/Prime-Vi
 set(OLD_GLOB
   "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/application.cppm"
   "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/game_state.cppm"
+  "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cppm"
   "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cppm"
   "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/renderer.cppm"
   )

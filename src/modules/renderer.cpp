@@ -11,7 +11,14 @@ module;
 #include <vector>
 module renderer;
 
-// AQUI DENTRO MORAM AS VARIÁVEIS DA RAYLIB!
+struct renderContext {
+  int limitIdx, startIdx, step;
+  float dotScale, invMaxP, rMax;
+  float minX, maxX, minY, maxY;
+  Color globalBreath;
+};
+
+// Raylib implementations for the PIMPL
 struct Renderer::Impl {
   Camera2D camera;
   Texture2D dot;
@@ -28,6 +35,81 @@ struct Renderer::Impl {
 
   const char *colorSchemeNames[4] = {"Calculated", "Breathing", "Custom Static",
                                      "Custom Gradient"};
+  Color GetPointColor(const NumberPoint &pt, const GameState &state,
+                      const renderContext &ctx) {
+    float distRatio = static_cast<float>(pt.p) * ctx.invMaxP;
+
+    switch (state.colorMode) {
+    case ColorMode::Calculated:
+      return ColorFromHSV(pt.hue, 0.8f, 1.0f);
+    case ColorMode::Breathing:
+      return ctx.globalBreath;
+    case ColorMode::CustomStatic:
+      return customStatic;
+    case ColorMode::CustomGradient:
+      return ColorLerp(customGradientCenter, customGradientEdge, distRatio);
+    }
+    return WHITE;
+  }
+  void DrawPointsMode(const std::vector<NumberPoint> &points,
+                      const GameState &state, const renderContext &ctx) {
+    // Only draws squares if up close
+    bool isFarAway = (camera.zoom < 0.5f);
+
+    if (isFarAway)
+      rlBegin(RL_LINES);
+    else
+      rlBegin(RL_QUADS);
+
+    // Draws each point, skipping by step
+    for (int i = ctx.startIdx; i < ctx.limitIdx; i += ctx.step) {
+      if (points[i].p > ctx.rMax)
+        break;
+
+      Vector2 pos = {(float)points[i].x, (float)points[i].y};
+      if (pos.x < ctx.minX || pos.x > ctx.maxX || pos.y < ctx.minY ||
+          pos.y > ctx.maxY)
+        continue;
+
+      // Gets the color of the current point
+      Color drawColor = GetPointColor(points[i], state, ctx);
+      rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+
+      if (isFarAway) {
+        rlVertex2f(pos.x, pos.y);
+        rlVertex2f(pos.x + ctx.dotScale, pos.y);
+      } else {
+        rlVertex2f(pos.x, pos.y);
+        rlVertex2f(pos.x, pos.y + ctx.dotScale);
+        rlVertex2f(pos.x + ctx.dotScale, pos.y + ctx.dotScale);
+        rlVertex2f(pos.x + ctx.dotScale, pos.y);
+      }
+    }
+    rlEnd();
+  }
+
+  void DrawWebMode(const std::vector<NumberPoint> &points,
+                   const GameState &state, const renderContext &ctx) {
+    rlBegin(RL_LINES);
+
+    // Avoids starting "in the middle" between where 2 lines should be
+    int safeStart = std::max(0, ctx.startIdx - ctx.step);
+
+    for (int i = safeStart; i < ctx.limitIdx - ctx.step; i += ctx.step) {
+
+      Vector2 p1 = {(float)points[i].x, (float)points[i].y};
+      Vector2 p2 = {(float)points[i + ctx.step].x,
+                    (float)points[i + ctx.step].y};
+
+      // Gets the color for the line
+      Color drawColor = GetPointColor(points[i], state, ctx);
+      rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+
+      rlVertex2f(p1.x, p1.y);
+      rlVertex2f(p2.x, p2.y);
+    }
+    rlEnd();
+  }
 };
 
 Renderer::Renderer(int width, int height, const std::string &title) {
@@ -77,309 +159,72 @@ void Renderer::BeginFrame() {
 
 void Renderer::EndFrame() { ::EndDrawing(); }
 
-void Renderer::ProcessInput(GameState &state, NumberGenerator &generator) {
-  // If not paused, pps increases with the camera zoomout
-  if (!state.ppsLock) {
-    state.primesPerSecond =
-        500.0f + (50.0f / std::sqrt(impl->camera.zoom)) * 1.0f;
-    if (state.primesPerSecond > 30000.0f)
-      state.primesPerSecond = 30000.0f;
-  }
-  float moveSpeed = 10.0f / impl->camera.zoom;
-
-  // Processes input
-  // Continuously altering keys
-  if (IsKeyDown(KEY_W))
-    impl->camera.target.y -= moveSpeed;
-  if (IsKeyDown(KEY_S))
-    impl->camera.target.y += moveSpeed;
-  if (IsKeyDown(KEY_A))
-    impl->camera.target.x -= moveSpeed;
-  if (IsKeyDown(KEY_D))
-    impl->camera.target.x += moveSpeed;
-
-  float mouseWheel = GetMouseWheelMove();
-  if (mouseWheel != 0) {
-    impl->zoomMode = 2;
-    impl->camera.zoom += (mouseWheel * 0.1f * impl->camera.zoom);
-  }
-  // Controlls PointsPerSecond
-  if (IsKeyDown(KEY_UP)) {
-    state.ppsLock = true;
-    state.primesPerSecond += 10.0f;
-  }
-  if (IsKeyDown(KEY_DOWN)) {
-    state.ppsLock = true;
-    state.primesPerSecond -= 10.0f;
-  }
-
-  // Typing number implementation
-  int character = GetCharPressed();
-  if (character >= '0' && character <= '9') {
-    impl->isTyping = true;
-    int len = std::char_traits<char>::length(impl->inputBuffer);
-    if (len < 15) {
-      impl->inputBuffer[len] = (char)character;
-      impl->inputBuffer[len + 1] = '\0';
-    }
-  }
-
-  if (impl->isTyping) {
-    if (IsKeyPressed(KEY_BACKSPACE)) {
-      int len = std::char_traits<char>::length(impl->inputBuffer);
-      if (len > 0)
-        impl->inputBuffer[len - 1] = '\0';
-      else
-        impl->isTyping = false;
-    }
-    if (IsKeyPressed(KEY_ENTER)) {
-      state.divMode = std::atoi(impl->inputBuffer);
-      generator.Reset();
-      state.currentLimit = 0;
-      impl->inputBuffer[0] = '\0';
-      impl->isTyping = false;
-    }
-    if (IsKeyPressed(KEY_ESCAPE)) {
-      impl->inputBuffer[0] = '\0';
-      impl->isTyping = false;
-    }
-  }
-
-  // Keys processed once on keypress, not repeatedly
-  int key = GetKeyPressed();
-  while (key > 0) {
-    if (key == KEY_F1)
-      state.showControls = !state.showControls;
-    if (key == KEY_F2)
-      state.showFPS = !state.showFPS;
-    if (key == KEY_F3)
-      state.showStats = !state.showStats;
-    if (key == KEY_F12)
-      state.drawAsWeb = !state.drawAsWeb;
-
-    if (key == KEY_R) {
-      impl->zoomMode = 0;
-      impl->camera.target = {0.0f, 0.0f};
-    }
-    if (key == KEY_F) {
-      impl->zoomMode = 1;
-      impl->camera.target = {0.0f, 0.0f};
-    }
-
-    // Custom colors
-    if (key == KEY_TAB) {
-      // Alters between 0 (Hidden), 1 (Solid) and 2 (Gradient)
-      state.colorPickerVisible = (state.colorPickerVisible + 1) % 3;
-    }
-
-    // Pause/unpause rendering. Only when not typing
-    if (key == KEY_ENTER && !impl->isTyping) {
-      if (!state.ppsLock) {
-        state.ppsLock = true;
-        state.primesPerSecond = 0.0f;
-      } else {
-        state.ppsLock = false;
-      }
-    }
-
-    // Screenshot
-    if (key == KEY_P) {
-      TakeScreenshot(TextFormat("prime_spiral_%d.png",
-                                static_cast<int>(state.currentLimit)));
-    }
-
-    // Change color mode
-    if (key == KEY_C)
-      state.colorMode =
-          static_cast<ColorMode>((static_cast<int>(state.colorMode) + 1) % 4);
-
-    if (key == KEY_RIGHT) {
-      state.divMode++;
-      generator.Reset();
-      state.currentLimit = 0;
-    }
-    if (key == KEY_LEFT && state.divMode > 0) {
-      state.divMode--;
-      generator.Reset();
-      state.currentLimit = 0;
-    }
-    // Benchmark
-    if (IsKeyPressed(KEY_B)) {
-      state.benchmarkMode = !state.benchmarkMode;
-
-      if (state.benchmarkMode) {
-        // Cleans list and generate primes within 50 million integers
-        generator.Reset();
-        generator.GeneratePrimesInRange(50000000);
-
-        // Joga todos de uma vez só na tela (ignora a animação)
-        state.currentLimit = generator.GetPoints().size();
-        state.showFPS = true; // Força o FPS na tela
-
-        // Bota a câmera num zoom ideal para ver o borrão inteiro
-        impl->camera.target = {0.0f, 0.0f};
-        impl->camera.zoom = 0.05f;
-      } else {
-        generator.Reset();
-        state.currentLimit = 0;
-        impl->camera.zoom = 1.0f;
-      }
-    }
-    key = GetKeyPressed();
-  }
-}
-
-void Renderer::DrawPoints(const std::vector<NumberPoint> &points,
-                          const GameState &state) {
+void Renderer::DrawScene(const std::vector<NumberPoint> &points,
+                         const GameState &state) {
   if (points.empty() || state.currentLimit < 1.0f)
     return;
 
-  BeginMode2D(impl->camera);
+  // Updates camera based on gamestate
+  impl->camera.target.x = state.camera.x;
+  impl->camera.target.y = state.camera.y;
+  impl->camera.zoom = state.camera.zoom;
+  impl->zoomMode = state.camera.zoomMode;
 
-  // Calculates the screen limits for culling (top left, bottom right, etc.)
+  // Declares the variables useful for culling, color and render
+  renderContext ctx;
+  ctx.limitIdx = static_cast<int>(state.currentLimit);
+
+  if (ctx.limitIdx > 0 && (impl->zoomMode == 0 || impl->zoomMode == 1)) {
+    float maxRadius = static_cast<float>(points[ctx.limitIdx - 1].p);
+    if (impl->zoomMode == 0)
+      impl->camera.zoom = ((float)impl->width / 2.0f) / (maxRadius * 0.9f);
+    else if (impl->zoomMode == 1)
+      impl->camera.zoom = ((float)impl->height / 2.0f) / (maxRadius * 1.1f);
+  }
+
+  // Calculates bounding box of camera for culling
   Vector2 tl = GetScreenToWorld2D({0, 0}, impl->camera);
   Vector2 br = GetScreenToWorld2D({(float)impl->width, (float)impl->height},
                                   impl->camera);
 
-  // Finds the coordinates closest to the center
-  float minX = std::min(tl.x, br.x);
-  float maxX = std::max(tl.x, br.x);
-  float minY = std::min(tl.y, br.y);
-  float maxY = std::max(tl.y, br.y);
+  ctx.minX = std::min(tl.x, br.x);
+  ctx.maxX = std::max(tl.x, br.x);
+  ctx.minY = std::min(tl.y, br.y);
+  ctx.maxY = std::max(tl.y, br.y);
 
-  // Calculates the camera point closest to ceter
-  float cx = (minX > 0) ? minX : ((maxX < 0) ? maxX : 0);
-  float cy = (minY > 0) ? minY : ((maxY < 0) ? maxY : 0);
+  float cx = (ctx.minX > 0) ? ctx.minX : ((ctx.maxX < 0) ? ctx.maxX : 0);
+  float cy = (ctx.minY > 0) ? ctx.minY : ((ctx.maxY < 0) ? ctx.maxY : 0);
   float rMin = std::sqrt(cx * cx + cy * cy);
-  float rMax =
+
+  ctx.rMax =
       std::sqrt(std::max(tl.x * tl.x + tl.y * tl.y, br.x * br.x + br.y * br.y));
 
-  // Binary searches the first possible element on screen
+  // Searches the first element that can be on screen
   auto it = std::lower_bound(
-      points.begin(), points.begin() + static_cast<int>(state.currentLimit),
-      rMin, [](const NumberPoint &p, float val) { return p.p < val; });
+      points.begin(), points.begin() + ctx.limitIdx, rMin,
+      [](const NumberPoint &p, float val) { return p.p < val; });
 
-  int startIdx = std::distance(points.begin(), it);
-  int limitIdx = static_cast<int>(state.currentLimit);
-  if (limitIdx > 0 && (impl->zoomMode == 0 || impl->zoomMode == 1)) {
-    float maxRadius = static_cast<float>(points[limitIdx - 1].p);
-    if (impl->zoomMode == 0) {
-      impl->camera.zoom = ((float)impl->width / 2.0f) / (maxRadius * 0.9f);
-    } else if (impl->zoomMode == 1) {
-      impl->camera.zoom = ((float)impl->height / 2.0f) / (maxRadius * 1.1f);
-    }
-  }
-
-  float dotScale = std::max(2.0f, 1.0f / impl->camera.zoom);
-  float invMaxP = 1.0f / static_cast<float>(points[limitIdx - 1].p);
-  Color globalBreath =
+  // Sets the other variables
+  ctx.startIdx = std::distance(points.begin(), it);
+  ctx.dotScale = std::max(2.0f, 1.0f / impl->camera.zoom);
+  ctx.invMaxP = 1.0f / static_cast<float>(points[ctx.limitIdx - 1].p);
+  ctx.globalBreath =
       ColorFromHSV(std::fmod(GetTime() * 50.0f, 360.0f), 0.7f, 1.0f);
+  ctx.step = (impl->zoomMode == 2 && ctx.limitIdx > 100000) ? 5 : 1;
 
-  // LOD step if moving and more than 100K elements on screen
-  bool isMoving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) ||
-                  IsKeyDown(KEY_D) || GetMouseWheelMove() != 0;
-  int step = (isMoving && limitIdx > 100000) ? 5 : 1;
-  if (state.drawAsWeb) {
-    // ==========================================
-    // MODO CONSTELAÇÃO (ARTE GERATIVA / LINHAS CONTÍNUAS)
-    // ==========================================
-    rlBegin(RL_LINES);
+  // Starts 2D mode for drawing scene
+  BeginMode2D(impl->camera);
 
-    // Recuamos 1 índice de segurança para garantir que linhas que vêm
-    // de fora da tela consigam entrar na tela suavemente.
-    int safeStart = std::max(0, startIdx - step);
+  // Chooses how to draw, affects how culling is calculated
+  if (state.drawAsWeb)
+    impl->DrawWebMode(points, state, ctx);
+  else
+    impl->DrawPointsMode(points, state, ctx);
 
-    // Vamos até limitIdx - step para poder conectar o ponto i com o ponto
-    // i+step
-    for (int i = safeStart; i < limitIdx - step; i += step) {
-
-      // Nós NÃO usamos o "if (pos.x < minX) continue;" aqui!
-      // A placa de vídeo vai cortar os excessos sozinha por hardware.
-
-      Vector2 p1 = {(float)points[i].x, (float)points[i].y};
-      Vector2 p2 = {(float)points[i + step].x, (float)points[i + step].y};
-
-      Color drawColor = WHITE;
-      float distRatio = static_cast<float>(points[i].p) * invMaxP;
-
-      switch (state.colorMode) {
-      case ColorMode::Calculated:
-        drawColor = ColorFromHSV(points[i].hue, 0.8f, 1.0f);
-        break;
-      case ColorMode::Breathing:
-        drawColor = globalBreath;
-        break;
-      case ColorMode::CustomStatic:
-        drawColor = impl->customStatic;
-        break;
-      case ColorMode::CustomGradient:
-        drawColor = ColorLerp(impl->customGradientCenter,
-                              impl->customGradientEdge, distRatio);
-        break;
-      }
-
-      rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-
-      // Forçamos o envio do PAR exato, conectando A com B explicitamente.
-      rlVertex2f(p1.x, p1.y);
-      rlVertex2f(p2.x, p2.y);
-    }
-    rlEnd();
-
-  } else {
-    // Implementation using raw vertices for performance
-    // Uses quads for rendering close ups, and lines for far away visualization
-    bool isFarAway = (impl->camera.zoom < 0.5f);
-    if (isFarAway)
-      rlBegin(RL_LINES);
-    else
-      rlBegin(RL_QUADS);
-
-    for (int i = startIdx; i < limitIdx; i += step) {
-      if (points[i].p > rMax)
-        break;
-
-      Vector2 pos = {(float)points[i].x, (float)points[i].y};
-      if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
-        continue;
-
-      Color drawColor = WHITE;
-      float distRatio = static_cast<float>(points[i].p) * invMaxP;
-
-      switch (state.colorMode) {
-      case ColorMode::Calculated:
-        drawColor = ColorFromHSV(points[i].hue, 0.8f, 1.0f);
-        break;
-      case ColorMode::Breathing:
-        drawColor = globalBreath;
-        break;
-      case ColorMode::CustomStatic:
-        drawColor = impl->customStatic;
-        break;
-      case ColorMode::CustomGradient:
-        drawColor = ColorLerp(impl->customGradientCenter,
-                              impl->customGradientEdge, distRatio);
-        break;
-      }
-
-      // Defines the color
-      rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-
-      if (isFarAway) {
-        rlVertex2f(pos.x, pos.y);
-        rlVertex2f(pos.x + dotScale, pos.y);
-      } else {
-        rlVertex2f(pos.x, pos.y);
-        rlVertex2f(pos.x, pos.y + dotScale);
-        rlVertex2f(pos.x + dotScale, pos.y + dotScale);
-        rlVertex2f(pos.x + dotScale, pos.y);
-      }
-    }
-
-    rlEnd();
-  }
+  // Stops 2D mode to draw UI later
   EndMode2D();
 }
+
 void Renderer::DrawUI(const std::vector<NumberPoint> &points,
                       const GameState &state) {
   if (state.showFPS)
@@ -453,7 +298,7 @@ void Renderer::DrawUI(const std::vector<NumberPoint> &points,
              20, WHITE);
     DrawText("[F1-F4] to show/hide UI elements", 10, impl->height - 230, 20,
              WHITE);
-    DrawText("B to enter Benchmark Mode", 10, impl->height - 250, 20, YELLOW);
+    DrawText("B to enter Benchmark Mode", 10, impl->height - 250, 20, WHITE);
   }
 
   // Typing box

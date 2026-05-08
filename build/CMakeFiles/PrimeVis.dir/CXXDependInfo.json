@@ -50,6 +50,28 @@
 			"type" : "CXX_MODULES",
 			"visibility" : "PUBLIC"
 		},
+		"CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"compile-features" : [],
+			"compile-options" : [],
+			"definitions" : 
+			[
+				"PLATFORM_DESKTOP",
+				"GRAPHICS_API_OPENGL_33"
+			],
+			"destination" : null,
+			"include-directories" : 
+			[
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
+			],
+			"name" : "CXX_MODULES",
+			"relative-directory" : "",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
 		"CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o" : 
 		{
 			"bmi-only" : false,
@@ -121,6 +143,11 @@
 		{
 			"language" : "CXX",
 			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/application.cpp"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cpp"
 		},
 		"CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o" : 
 		{

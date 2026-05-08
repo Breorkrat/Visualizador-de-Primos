@@ -84,6 +84,26 @@ build CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o: CXX_COMPILER__Prime
   TARGET_SUPPORT_DIR = CMakeFiles/PrimeVis.dir
   dyndep = CMakeFiles/PrimeVis.dir/CXX.dd
 
+build CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.ddi: CXX_SCAN__PrimeVis_ /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cpp || cmake_object_order_depends_target_PrimeVis
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  DEP_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.ddi.d
+  DYNDEP_INTERMEDIATE_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.ddi
+  FLAGS = -std=gnu++20
+  INCLUDES = -I/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src -isystem /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src
+  OBJ_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o
+  PREPROCESSED_OUTPUT_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.ddi.i
+
+build CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o: CXX_COMPILER__PrimeVis_scanned_ /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cpp | CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.modmap || cmake_object_order_depends_target_PrimeVis CMakeFiles/PrimeVis.dir/CXX.dd
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  DEP_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.d
+  DYNDEP_MODULE_MAP_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.modmap
+  FLAGS = -std=gnu++20
+  INCLUDES = -I/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src -isystem /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src
+  OBJECT_DIR = CMakeFiles/PrimeVis.dir
+  OBJECT_FILE_DIR = CMakeFiles/PrimeVis.dir/src/modules
+  TARGET_SUPPORT_DIR = CMakeFiles/PrimeVis.dir
+  dyndep = CMakeFiles/PrimeVis.dir/CXX.dd
+
 build CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o.ddi: CXX_SCAN__PrimeVis_ /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cpp || cmake_object_order_depends_target_PrimeVis
   DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
   DEP_FILE = CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o.ddi.d
@@ -164,6 +184,26 @@ build CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o: CXX_COMPILER__Prime
   TARGET_SUPPORT_DIR = CMakeFiles/PrimeVis.dir
   dyndep = CMakeFiles/PrimeVis.dir/CXX.dd
 
+build CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.ddi: CXX_SCAN__PrimeVis_ /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cppm || cmake_object_order_depends_target_PrimeVis
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  DEP_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.ddi.d
+  DYNDEP_INTERMEDIATE_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.ddi
+  FLAGS = -std=gnu++20
+  INCLUDES = -I/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src -isystem /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src
+  OBJ_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o
+  PREPROCESSED_OUTPUT_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.ddi.i
+
+build CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o: CXX_COMPILER__PrimeVis_scanned_ /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cppm | CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.modmap || cmake_object_order_depends_target_PrimeVis CMakeFiles/PrimeVis.dir/CXX.dd
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  DEP_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.d
+  DYNDEP_MODULE_MAP_FILE = CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.modmap
+  FLAGS = -std=gnu++20
+  INCLUDES = -I/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src -isystem /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src
+  OBJECT_DIR = CMakeFiles/PrimeVis.dir
+  OBJECT_FILE_DIR = CMakeFiles/PrimeVis.dir/src/modules
+  TARGET_SUPPORT_DIR = CMakeFiles/PrimeVis.dir
+  dyndep = CMakeFiles/PrimeVis.dir/CXX.dd
+
 build CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o.ddi: CXX_SCAN__PrimeVis_ /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cppm || cmake_object_order_depends_target_PrimeVis
   DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
   DEP_FILE = CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o.ddi.d
@@ -204,7 +244,7 @@ build CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o: CXX_COMPILER__PrimeVi
   TARGET_SUPPORT_DIR = CMakeFiles/PrimeVis.dir
   dyndep = CMakeFiles/PrimeVis.dir/CXX.dd
 
-build CMakeFiles/PrimeVis.dir/CXX.dd | CMakeFiles/PrimeVis.dir/CXXModules.json CMakeFiles/PrimeVis.dir/src/main.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/application.cppm.o.modmap CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o.modmap CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o.modmap CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o.modmap: CXX_DYNDEP__PrimeVis_ CMakeFiles/PrimeVis.dir/src/main.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/application.cppm.o.ddi CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o.ddi CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o.ddi CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o.ddi | /home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/PrimeVis.dir/CXXDependInfo.json
+build CMakeFiles/PrimeVis.dir/CXX.dd | CMakeFiles/PrimeVis.dir/CXXModules.json CMakeFiles/PrimeVis.dir/src/main.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o.modmap CMakeFiles/PrimeVis.dir/src/modules/application.cppm.o.modmap CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o.modmap CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.modmap CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o.modmap CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o.modmap: CXX_DYNDEP__PrimeVis_ CMakeFiles/PrimeVis.dir/src/main.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o.ddi CMakeFiles/PrimeVis.dir/src/modules/application.cppm.o.ddi CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o.ddi CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.ddi CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o.ddi CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o.ddi | /home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/PrimeVis.dir/CXXDependInfo.json
 
 
 # =============================================================================
@@ -214,7 +254,7 @@ build CMakeFiles/PrimeVis.dir/CXX.dd | CMakeFiles/PrimeVis.dir/CXXModules.json C
 #############################################
 # Link the executable PrimeVis
 
-build PrimeVis: CXX_EXECUTABLE_LINKER__PrimeVis_ CMakeFiles/PrimeVis.dir/src/main.cpp.o CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o CMakeFiles/PrimeVis.dir/src/modules/application.cppm.o CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o | _deps/raylib-build/raylib/libraylib.a /usr/lib/libOpenGL.so /usr/lib/libGLX.so /usr/lib/libGLU.so /usr/lib/librt.a /usr/lib/libm.so /usr/lib/libSM.so /usr/lib/libICE.so /usr/lib/libX11.so /usr/lib/libXext.so || _deps/raylib-build/raylib/external/glfw/src/glfw _deps/raylib-build/raylib/libraylib.a
+build PrimeVis: CXX_EXECUTABLE_LINKER__PrimeVis_ CMakeFiles/PrimeVis.dir/src/main.cpp.o CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o CMakeFiles/PrimeVis.dir/src/modules/application.cppm.o CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o | _deps/raylib-build/raylib/libraylib.a /usr/lib/libOpenGL.so /usr/lib/libGLX.so /usr/lib/libGLU.so /usr/lib/librt.a /usr/lib/libm.so /usr/lib/libSM.so /usr/lib/libICE.so /usr/lib/libX11.so /usr/lib/libXext.so || _deps/raylib-build/raylib/external/glfw/src/glfw _deps/raylib-build/raylib/libraylib.a
   DEP_FILE = CMakeFiles/PrimeVis.dir/link.d
   LINK_FLAGS = -Wl,--dependency-file=CMakeFiles/PrimeVis.dir/link.d
   LINK_LIBRARIES = _deps/raylib-build/raylib/libraylib.a  -lpthread  /usr/lib/libOpenGL.so  /usr/lib/libGLX.so  /usr/lib/libGLU.so  /usr/lib/librt.a  -lm  -ldl  -lm  /usr/lib/libSM.so  /usr/lib/libICE.so  /usr/lib/libX11.so  /usr/lib/libXext.so

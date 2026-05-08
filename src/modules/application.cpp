@@ -1,6 +1,10 @@
+module;
+#include <raylib.h>
+
 module application;
 
-#include <raylib.h>
+import input;
+
 constexpr int THRESHOLD = 1000;
 constexpr int SEARCH_RANGE = 500000;
 constexpr int FIRST_GEN = 1000;
@@ -20,11 +24,11 @@ void Application::Run() {
   while (!WindowShouldClose()) {
     float dt = GetFrameTime();
 
-    HandleInput();
+    inputManager.ProcessInputs(state, generator);
     Update(dt);
 
     renderer.BeginFrame();
-    renderer.DrawPoints(generator.GetPoints(), state);
+    renderer.DrawScene(generator.GetPoints(), state);
     renderer.DrawUI(generator.GetPoints(), state);
     renderer.EndFrame();
   }
@@ -52,4 +56,4 @@ void Application::Update(float dt) {
 
 // Passes the state and generator to Renderer so that it can alter them
 // With the keyboard controls
-void Application::HandleInput() { renderer.ProcessInput(state, generator); }
+// void Application::HandleInput() { renderer.ProcessInput(state, generator); }

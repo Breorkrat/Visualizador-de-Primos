@@ -13,6 +13,12 @@
 },
 {
   "directory": "/home/breorkrat/Apps/Prime-Visualizer-CPP/build",
+  "command": "/usr/bin/c++ -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -I/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src -isystem /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src -std=gnu++20 -fmodules-ts -fmodule-mapper=CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o -c /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cpp",
+  "file": "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cpp",
+  "output": "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o"
+},
+{
+  "directory": "/home/breorkrat/Apps/Prime-Visualizer-CPP/build",
   "command": "/usr/bin/c++ -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -I/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src -isystem /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src -std=gnu++20 -fmodules-ts -fmodule-mapper=CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o -c /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cpp",
   "file": "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cpp",
   "output": "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o"
@@ -34,6 +40,12 @@
   "command": "/usr/bin/c++ -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -I/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src -isystem /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src -std=gnu++20 -fmodules-ts -fmodule-mapper=CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o -c /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/game_state.cppm",
   "file": "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/game_state.cppm",
   "output": "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o"
+},
+{
+  "directory": "/home/breorkrat/Apps/Prime-Visualizer-CPP/build",
+  "command": "/usr/bin/c++ -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -I/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src -isystem /home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src -std=gnu++20 -fmodules-ts -fmodule-mapper=CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o -c /home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cppm",
+  "file": "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cppm",
+  "output": "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o"
 },
 {
   "directory": "/home/breorkrat/Apps/Prime-Visualizer-CPP/build",
