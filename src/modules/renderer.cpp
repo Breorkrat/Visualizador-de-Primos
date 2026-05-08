@@ -154,6 +154,8 @@ void Renderer::ProcessInput(GameState &state, NumberGenerator &generator) {
       state.showFPS = !state.showFPS;
     if (key == KEY_F3)
       state.showStats = !state.showStats;
+    if (key == KEY_F12)
+      state.drawAsWeb = !state.drawAsWeb;
 
     if (key == KEY_R) {
       impl->zoomMode = 0;
@@ -277,58 +279,105 @@ void Renderer::DrawPoints(const std::vector<NumberPoint> &points,
   bool isMoving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) ||
                   IsKeyDown(KEY_D) || GetMouseWheelMove() != 0;
   int step = (isMoving && limitIdx > 100000) ? 5 : 1;
-
-  // Implementation using raw vertices for performance
-  // Uses quads for rendering close ups, and lines for far away visualization
-  bool isFarAway = (impl->camera.zoom < 0.5f);
-  if (isFarAway)
+  if (state.drawAsWeb) {
+    // ==========================================
+    // MODO CONSTELAÇÃO (ARTE GERATIVA / LINHAS CONTÍNUAS)
+    // ==========================================
     rlBegin(RL_LINES);
-  else
-    rlBegin(RL_QUADS);
 
-  for (int i = startIdx; i < limitIdx; i += step) {
-    if (points[i].p > rMax)
-      break;
+    // Recuamos 1 índice de segurança para garantir que linhas que vêm
+    // de fora da tela consigam entrar na tela suavemente.
+    int safeStart = std::max(0, startIdx - step);
 
-    Vector2 pos = {(float)points[i].x, (float)points[i].y};
-    if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
-      continue;
+    // Vamos até limitIdx - step para poder conectar o ponto i com o ponto
+    // i+step
+    for (int i = safeStart; i < limitIdx - step; i += step) {
 
-    Color drawColor = WHITE;
-    float distRatio = static_cast<float>(points[i].p) * invMaxP;
+      // Nós NÃO usamos o "if (pos.x < minX) continue;" aqui!
+      // A placa de vídeo vai cortar os excessos sozinha por hardware.
 
-    switch (state.colorMode) {
-    case ColorMode::Calculated:
-      drawColor = ColorFromHSV(points[i].hue, 0.8f, 1.0f);
-      break;
-    case ColorMode::Breathing:
-      drawColor = globalBreath;
-      break;
-    case ColorMode::CustomStatic:
-      drawColor = impl->customStatic;
-      break;
-    case ColorMode::CustomGradient:
-      drawColor = ColorLerp(impl->customGradientCenter,
-                            impl->customGradientEdge, distRatio);
-      break;
+      Vector2 p1 = {(float)points[i].x, (float)points[i].y};
+      Vector2 p2 = {(float)points[i + step].x, (float)points[i + step].y};
+
+      Color drawColor = WHITE;
+      float distRatio = static_cast<float>(points[i].p) * invMaxP;
+
+      switch (state.colorMode) {
+      case ColorMode::Calculated:
+        drawColor = ColorFromHSV(points[i].hue, 0.8f, 1.0f);
+        break;
+      case ColorMode::Breathing:
+        drawColor = globalBreath;
+        break;
+      case ColorMode::CustomStatic:
+        drawColor = impl->customStatic;
+        break;
+      case ColorMode::CustomGradient:
+        drawColor = ColorLerp(impl->customGradientCenter,
+                              impl->customGradientEdge, distRatio);
+        break;
+      }
+
+      rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+
+      // Forçamos o envio do PAR exato, conectando A com B explicitamente.
+      rlVertex2f(p1.x, p1.y);
+      rlVertex2f(p2.x, p2.y);
+    }
+    rlEnd();
+
+  } else {
+    // Implementation using raw vertices for performance
+    // Uses quads for rendering close ups, and lines for far away visualization
+    bool isFarAway = (impl->camera.zoom < 0.5f);
+    if (isFarAway)
+      rlBegin(RL_LINES);
+    else
+      rlBegin(RL_QUADS);
+
+    for (int i = startIdx; i < limitIdx; i += step) {
+      if (points[i].p > rMax)
+        break;
+
+      Vector2 pos = {(float)points[i].x, (float)points[i].y};
+      if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
+        continue;
+
+      Color drawColor = WHITE;
+      float distRatio = static_cast<float>(points[i].p) * invMaxP;
+
+      switch (state.colorMode) {
+      case ColorMode::Calculated:
+        drawColor = ColorFromHSV(points[i].hue, 0.8f, 1.0f);
+        break;
+      case ColorMode::Breathing:
+        drawColor = globalBreath;
+        break;
+      case ColorMode::CustomStatic:
+        drawColor = impl->customStatic;
+        break;
+      case ColorMode::CustomGradient:
+        drawColor = ColorLerp(impl->customGradientCenter,
+                              impl->customGradientEdge, distRatio);
+        break;
+      }
+
+      // Defines the color
+      rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+
+      if (isFarAway) {
+        rlVertex2f(pos.x, pos.y);
+        rlVertex2f(pos.x + dotScale, pos.y);
+      } else {
+        rlVertex2f(pos.x, pos.y);
+        rlVertex2f(pos.x, pos.y + dotScale);
+        rlVertex2f(pos.x + dotScale, pos.y + dotScale);
+        rlVertex2f(pos.x + dotScale, pos.y);
+      }
     }
 
-    // Defines the color
-    rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-
-    if (isFarAway) {
-      rlVertex2f(pos.x, pos.y);
-      rlVertex2f(pos.x + dotScale, pos.y);
-    } else {
-      rlVertex2f(pos.x, pos.y);
-      rlVertex2f(pos.x, pos.y + dotScale);
-      rlVertex2f(pos.x + dotScale, pos.y + dotScale);
-      rlVertex2f(pos.x + dotScale, pos.y);
-    }
+    rlEnd();
   }
-
-  rlEnd();
-
   EndMode2D();
 }
 void Renderer::DrawUI(const std::vector<NumberPoint> &points,

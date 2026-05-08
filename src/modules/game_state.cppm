@@ -22,4 +22,5 @@ export struct GameState {
   bool showFPS = false;
   bool showCursor = false;
   int colorPickerVisible = 0; // 0 = Hidden, 1 = Static, 2 = Gradient
+  bool drawAsWeb = 0;
 };
