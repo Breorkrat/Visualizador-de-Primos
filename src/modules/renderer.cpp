@@ -61,15 +61,32 @@ struct Renderer::Impl {
     else
       rlBegin(RL_QUADS);
 
+    // Stores the last position in the world a point was drawn, starting really
+    // far away
+    Vector2 lastDrawnPos = {-1e10f, -1e10f};
+
+    // Precision for what counts as occupying the same pixel
+    float minWorldDist = 1.0f / camera.zoom;
+
     // Draws each point, skipping by step
     for (int i = ctx.startIdx; i < ctx.limitIdx; i += ctx.step) {
       if (points[i].p > ctx.rMax)
         break;
 
       Vector2 pos = {(float)points[i].x, (float)points[i].y};
+
+      // Density filter
+      if (std::abs(pos.x - lastDrawnPos.x) < minWorldDist &&
+          std::abs(pos.y - lastDrawnPos.y) < minWorldDist) {
+        continue;
+      }
+
+      // Viewport Culling
       if (pos.x < ctx.minX || pos.x > ctx.maxX || pos.y < ctx.minY ||
           pos.y > ctx.maxY)
         continue;
+
+      lastDrawnPos = pos;
 
       // Gets the color of the current point
       Color drawColor = GetPointColor(points[i], state, ctx);

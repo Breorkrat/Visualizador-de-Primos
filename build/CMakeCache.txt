@@ -30,7 +30,7 @@ CMAKE_AR:FILEPATH=/usr/bin/ar
 CMAKE_BUILD_TYPE:STRING=
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
+CMAKE_CXX_COMPILER:STRING=/usr/bin/c++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -56,7 +56,7 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //C compiler
-CMAKE_C_COMPILER:FILEPATH=/usr/bin/cc
+CMAKE_C_COMPILER:STRING=/usr/bin/cc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -494,10 +494,10 @@ X11_X11_xcb_INCLUDE_PATH:PATH=/usr/include
 X11_X11_xcb_LIB:FILEPATH=/usr/lib/libX11-xcb.so
 
 //Path to a file.
-X11_XRes_INCLUDE_PATH:PATH=X11_XRes_INCLUDE_PATH-NOTFOUND
+X11_XRes_INCLUDE_PATH:PATH=/usr/include
 
 //Path to a library.
-X11_XRes_LIB:FILEPATH=X11_XRes_LIB-NOTFOUND
+X11_XRes_LIB:FILEPATH=/usr/lib/libXRes.so
 
 //Path to a file.
 X11_XShm_INCLUDE_PATH:PATH=/usr/include
@@ -518,10 +518,10 @@ X11_Xau_INCLUDE_PATH:PATH=/usr/include
 X11_Xau_LIB:FILEPATH=/usr/lib/libXau.so
 
 //Path to a file.
-X11_Xaw_INCLUDE_PATH:PATH=X11_Xaw_INCLUDE_PATH-NOTFOUND
+X11_Xaw_INCLUDE_PATH:PATH=/usr/include
 
 //Path to a library.
-X11_Xaw_LIB:FILEPATH=X11_Xaw_LIB-NOTFOUND
+X11_Xaw_LIB:FILEPATH=/usr/lib/libXaw.so
 
 //Path to a file.
 X11_Xcomposite_INCLUDE_PATH:PATH=/usr/include
@@ -596,16 +596,16 @@ X11_Xmu_INCLUDE_PATH:PATH=/usr/include
 X11_Xmu_LIB:FILEPATH=/usr/lib/libXmu.so
 
 //Path to a file.
-X11_Xpm_INCLUDE_PATH:PATH=X11_Xpm_INCLUDE_PATH-NOTFOUND
+X11_Xpm_INCLUDE_PATH:PATH=/usr/include
 
 //Path to a library.
-X11_Xpm_LIB:FILEPATH=X11_Xpm_LIB-NOTFOUND
+X11_Xpm_LIB:FILEPATH=/usr/lib/libXpm.so
 
 //Path to a file.
-X11_Xpresent_INCLUDE_PATH:PATH=X11_Xpresent_INCLUDE_PATH-NOTFOUND
+X11_Xpresent_INCLUDE_PATH:PATH=/usr/include
 
 //Path to a library.
-X11_Xpresent_LIB:FILEPATH=X11_Xpresent_LIB-NOTFOUND
+X11_Xpresent_LIB:FILEPATH=/usr/lib/libXpresent.so
 
 //Path to a file.
 X11_Xrandr_INCLUDE_PATH:PATH=/usr/include
@@ -911,7 +911,7 @@ CMAKE_CACHEFILE_DIR:INTERNAL=/home/breorkrat/Apps/Prime-Visualizer-CPP/build
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=4
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=3
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=4
 //Patch version of cmake used to create the current loaded cache
 CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
 //Path to CMake executable.
@@ -952,10 +952,15 @@ CMAKE_C_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_C_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS_RELWITHDEBINFO
 CMAKE_C_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//Set initial state for CMake diagnostics; used to persist state
+// set by command-line options across invocations.
+CMAKE_DIAGNOSTIC_INIT:INTERNAL=CMD_AUTHOR=WARN;CMD_DEPRECATED=WARN;CMD_EXPERIMENTAL=WARN;CMD_INSTALL_ABSOLUTE_DESTINATION=IGNORE;CMD_POLICY=WARN;CMD_UNINITIALIZED=IGNORE;CMD_UNUSED_CLI=WARN
 //ADVANCED property for variable: CMAKE_DLLTOOL
 CMAKE_DLLTOOL-ADVANCED:INTERNAL=1
 //Path to cache edit program executable.
 CMAKE_EDIT_COMMAND:INTERNAL=/usr/bin/ccmake
+//Deprecated.  Use -W[no-]error=deprecated instead.
+CMAKE_ERROR_DEPRECATED:INTERNAL=OFF
 //Executable file format
 CMAKE_EXECUTABLE_FORMAT:INTERNAL=ELF
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS
@@ -1095,6 +1100,8 @@ CMAKE_TAPI-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Deprecated.  Use -W[no-]deprecated instead.
+CMAKE_WARN_DEPRECATED:INTERNAL=ON
 //Test COMPILER_HAS_THOSE_TOGGLES
 COMPILER_HAS_THOSE_TOGGLES:INTERNAL=1
 //ADVANCED property for variable: CPACK_SOURCE_RPM
