@@ -1,11 +1,13 @@
 module;
+#include <cstdint>
 #include <vector>
 
 export module math_logic;
 
 export struct NumberPoint {
-  double x, y;
-  unsigned long long p;
+  float x;
+  float y;
+  float p;
 };
 
 export class NumberGenerator {
@@ -17,12 +19,13 @@ public:
   void Reset();
 
   const std::vector<NumberPoint> &GetPoints() const { return points; }
+  size_t Size() const { return points.size(); }
 
 private:
-  void AddPoint(unsigned long long p);
+  void AddPoint(uint64_t p);
 
   std::vector<NumberPoint> points;
 
   // Last number checked on the "is prime/multiple of"
-  unsigned long long lastChecked = 0;
+  uint64_t lastChecked = 0;
 };
