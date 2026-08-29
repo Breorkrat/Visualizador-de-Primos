@@ -5,18 +5,20 @@ module;
 #define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
 
-#include <algorithm> // Para o std::lower_bound (sua nova busca binária)
+#include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <string>
 #include <vector>
+
 module renderer;
 
 // --- GLSL 330 Shader ---
 static const char *COLOR_VS = R"(#version 330
-in vec3 vertexPosition;
-in vec2 vertexTexCoord; // We use vertexTexCoord.x to pass 'p'
+layout(location = 0) in vec2 vertexPosition; // x, y
 
 uniform mat4 mvp;
+uniform float u_pointSize;
 uniform float u_maxP;
 uniform int u_colorMode;
 uniform vec4 u_customStatic;
@@ -33,23 +35,24 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 void main() {
-    gl_Position = mvp * vec4(vertexPosition, 1.0);
+    gl_Position = mvp * vec4(vertexPosition.xy, 0.0, 1.0);
+    gl_PointSize = u_pointSize;
 
-    float pVal = vertexTexCoord.x;
+    float pVal = length(vertexPosition);
     float distRatio = (u_maxP > 0.0) ? clamp(pVal / u_maxP, 0.0, 1.0) : 0.0;
 
     if (u_colorMode == 0) {
-        // Calculated Mode: Exact same HSV formula, now executed on GPU
+        // Calculated (HSV)
         float hue = mod(pVal * 0.05, 360.0) / 360.0;
         fragColor = vec4(hsv2rgb(vec3(hue, 0.8, 1.0)), 1.0);
     } else if (u_colorMode == 1) {
-        // Breathing Mode
+        // Breathing
         fragColor = u_globalBreath;
     } else if (u_colorMode == 2) {
         // Custom Static
         fragColor = u_customStatic;
     } else {
-        // Custom Gradient Mode
+        // Custom Gradient
         fragColor = mix(u_gradientCenter, u_gradientEdge, distRatio);
     }
 }
@@ -64,22 +67,21 @@ void main() {
 }
 )";
 
-struct renderContext {
-  int limitIdx, startIdx, step;
-  float dotScale, invMaxP, rMax;
-  float minX, maxX, minY, maxY;
-  Color globalBreath;
-};
-
-// Raylib implementations for the PIMPL
 struct Renderer::Impl {
   Camera2D camera;
-  Texture2D dot;
   int width, height, centrox, centroy;
-  char zoomMode = 0; // 0: Cover, 1: Full, 2: Free
+  char zoomMode = 0;
 
-  // Shader & Uniforms
+  // GPU Buffer State
+  unsigned int vaoId = 0;
+  unsigned int vboId = 0;
+  size_t gpuAllocatedCapacity = 0;
+  size_t gpuSyncedCount = 0;
+
+  // Shader & Uniform Locations
   Shader colorShader;
+  int locMvp;
+  int locPointSize;
   int locMaxP;
   int locColorMode;
   int locCustomStatic;
@@ -92,85 +94,131 @@ struct Renderer::Impl {
   Color customGradientCenter = WHITE;
   Color customGradientEdge = BLACK;
 
-  char inputBuffer[16] = {0};
-  bool isTyping = false;
-
   const char *colorSchemeNames[4] = {"Calculated", "Breathing", "Custom Static",
                                      "Custom Gradient"};
 
-  void DrawPointsMode(const std::vector<NumberPoint> &points,
-                      const GameState &state, const renderContext &ctx) {
-    // Only draws squares if up close
-    bool isFarAway = (camera.zoom < 0.5f);
+  void InitGPU() {
+    colorShader = LoadShaderFromMemory(COLOR_VS, COLOR_FS);
 
-    if (isFarAway)
-      rlBegin(RL_LINES);
-    else
-      rlBegin(RL_QUADS);
+    locMvp = GetShaderLocation(colorShader, "mvp");
+    locPointSize = GetShaderLocation(colorShader, "u_pointSize");
+    locMaxP = GetShaderLocation(colorShader, "u_maxP");
+    locColorMode = GetShaderLocation(colorShader, "u_colorMode");
+    locCustomStatic = GetShaderLocation(colorShader, "u_customStatic");
+    locGradientCenter = GetShaderLocation(colorShader, "u_gradientCenter");
+    locGradientEdge = GetShaderLocation(colorShader, "u_gradientEdge");
+    locGlobalBreath = GetShaderLocation(colorShader, "u_globalBreath");
 
-    // Stores the last position in the world a point was drawn, starting really
-    // far away
-    Vector2 lastDrawnPos = {-1e10f, -1e10f};
+    // Initialize initial GPU buffer (capacity for 100k points, dynamically
+    // grows)
+    vaoId = rlLoadVertexArray();
+    rlEnableVertexArray(vaoId);
 
-    // Precision for what counts as occupying the same pixel
-    float minWorldDist = 1.0f / camera.zoom;
+    gpuAllocatedCapacity = 100000;
+    vboId = rlLoadVertexBuffer(
+        nullptr, gpuAllocatedCapacity * sizeof(NumberPoint), true);
 
-    // Draws each point, skipping by step
-    for (int i = ctx.startIdx; i < ctx.limitIdx; i += ctx.step) {
-      if (points[i].p > ctx.rMax)
-        break;
+    // Attribute 0: vec2 (x, y)
+    rlSetVertexAttribute(0, 2, RL_FLOAT, false, sizeof(NumberPoint), 0);
+    rlEnableVertexAttribute(0);
 
-      Vector2 pos = {(float)points[i].x, (float)points[i].y};
-
-      // Density filter
-      if (std::abs(pos.x - lastDrawnPos.x) < minWorldDist &&
-          std::abs(pos.y - lastDrawnPos.y) < minWorldDist) {
-        continue;
-      }
-
-      // Viewport Culling
-      if (pos.x < ctx.minX || pos.x > ctx.maxX || pos.y < ctx.minY ||
-          pos.y > ctx.maxY)
-        continue;
-
-      lastDrawnPos = pos;
-
-      // Send 'p' to the GPU shader via texcoord. Zero CPU color math!
-      rlTexCoord2f(static_cast<float>(points[i].p), 0.0f);
-
-      if (isFarAway) {
-        rlVertex2f(pos.x, pos.y);
-        rlVertex2f(pos.x + ctx.dotScale, pos.y);
-      } else {
-        rlVertex2f(pos.x, pos.y);
-        rlVertex2f(pos.x, pos.y + ctx.dotScale);
-        rlVertex2f(pos.x + ctx.dotScale, pos.y + ctx.dotScale);
-        rlVertex2f(pos.x + ctx.dotScale, pos.y);
-      }
-    }
-    rlEnd();
+    rlDisableVertexArray();
   }
 
-  void DrawWebMode(const std::vector<NumberPoint> &points,
-                   const GameState &state, const renderContext &ctx) {
-    rlBegin(RL_LINES);
+  void FreeGPU() {
+    UnloadShader(colorShader);
+    if (vboId > 0)
+      rlUnloadVertexBuffer(vboId);
+    if (vaoId > 0)
+      rlUnloadVertexArray(vaoId);
+  }
 
-    // Avoids starting "in the middle" between where 2 lines should be
-    int safeStart = std::max(0, ctx.startIdx - ctx.step);
+  void DrawPointLabels(const std::vector<NumberPoint> &points, int renderCount,
+                       const GameState &state, float maxP, Color breathCol) {
+    constexpr float TEXT_START_ZOOM = 1.2f;
+    constexpr float TEXT_FULL_ZOOM = 2.2f;
 
-    for (int i = safeStart; i < ctx.limitIdx - ctx.step; i += ctx.step) {
+    // Only show numbers when zoomed in close
+    if (camera.zoom < TEXT_START_ZOOM)
+      return;
 
-      Vector2 p1 = {(float)points[i].x, (float)points[i].y};
-      Vector2 p2 = {(float)points[i + ctx.step].x,
-                    (float)points[i + ctx.step].y};
+    float alpha = std::clamp((camera.zoom - TEXT_START_ZOOM) /
+                                 (TEXT_FULL_ZOOM - TEXT_START_ZOOM),
+                             0.0f, 1.0f);
+    int fontSize = std::clamp(static_cast<int>(7.0f * camera.zoom), 10, 160);
+    int shadowOffset = std::max(1, fontSize / 16);
 
-      // Gets the color for the line
-      rlTexCoord2f(static_cast<float>(points[i].p), 0.0f);
+    // Smooth fade-in between zoom 2.0 and 4.0
+    Color textColor = Fade(RAYWHITE, alpha);
+    Color shadowColor = Fade(BLACK, alpha * 0.9f);
 
-      rlVertex2f(p1.x, p1.y);
-      rlVertex2f(p2.x, p2.y);
+    // Viewport Bounding Box in World Coordinates
+    Vector2 tl = GetScreenToWorld2D({0, 0}, camera);
+    Vector2 br = GetScreenToWorld2D({(float)width, (float)height}, camera);
+
+    float minX = std::min(tl.x, br.x);
+    float maxX = std::max(tl.x, br.x);
+    float minY = std::min(tl.y, br.y);
+    float maxY = std::max(tl.y, br.y);
+
+    float cx = (minX > 0) ? minX : ((maxX < 0) ? maxX : 0);
+    float cy = (minY > 0) ? minY : ((maxY < 0) ? maxY : 0);
+    float rMin = std::sqrt(cx * cx + cy * cy);
+    float rMax = std::sqrt(
+        std::max({tl.x * tl.x + tl.y * tl.y, br.x * br.x + br.y * br.y,
+                  tl.x * tl.x + br.y * br.y, br.x * br.x + tl.y * tl.y}));
+
+    // Binary search for first visible point
+    auto it = std::lower_bound(
+        points.begin(), points.begin() + renderCount, rMin,
+        [](const NumberPoint &p, float val) { return (float)p.p < val; });
+
+    size_t startIdx = std::distance(points.begin(), it);
+
+    // Draw each number centered exactly on its point coordinates
+    for (size_t i = startIdx; i < static_cast<size_t>(renderCount); ++i) {
+      if (static_cast<float>(points[i].p) > rMax)
+        break;
+
+      if (points[i].x >= minX && points[i].x <= maxX && points[i].y >= minY &&
+          points[i].y <= maxY) {
+
+        Vector2 sPos = GetWorldToScreen2D({points[i].x, points[i].y}, camera);
+
+        // Get color matching current scheme
+        Color baseCol = RAYWHITE;
+        if (state.colorMode == ColorMode::Calculated) {
+          float hue =
+              std::fmod(static_cast<float>(points[i].p) * 0.05f, 360.0f);
+          baseCol = ColorFromHSV(hue, 0.8f, 1.0f);
+        } else if (state.colorMode == ColorMode::Breathing) {
+          baseCol = breathCol;
+        } else if (state.colorMode == ColorMode::CustomStatic) {
+          baseCol = customStatic;
+        } else if (state.colorMode == ColorMode::CustomGradient) {
+          float ratio = (maxP > 0.0f)
+                            ? std::clamp(static_cast<float>(points[i].p) / maxP,
+                                         0.0f, 1.0f)
+                            : 0.0f;
+          baseCol = ColorLerp(customGradientCenter, customGradientEdge, ratio);
+        }
+
+        Color textColor = Fade(baseCol, alpha);
+        Color shadowColor = Fade(BLACK, alpha * 0.9f);
+
+        const char *label = TextFormat("%u", points[i].p);
+        int textWidth = MeasureText(label, fontSize);
+
+        // Center text on (sPos.x, sPos.y)
+        int drawX = (int)sPos.x - (textWidth / 2);
+        int drawY = (int)sPos.y - (fontSize / 2);
+
+        // Dark drop-shadow for contrast, followed by the centered number
+        DrawText(label, drawX + shadowOffset, drawY + shadowOffset, fontSize,
+                 shadowColor);
+        DrawText(label, drawX, drawY, fontSize, textColor);
+      }
     }
-    rlEnd();
   }
 };
 
@@ -183,37 +231,18 @@ Renderer::Renderer(int width, int height, const std::string &title) {
 
   SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_RESIZABLE);
   InitWindow(width, height, title.c_str());
-  SetTargetFPS(60);
+  SetTargetFPS(180);
 
-  // Load custom GPU Color Shader
-  impl->colorShader = LoadShaderFromMemory(COLOR_VS, COLOR_FS);
-  impl->locMaxP = GetShaderLocation(impl->colorShader, "u_maxP");
-  impl->locColorMode = GetShaderLocation(impl->colorShader, "u_colorMode");
-  impl->locCustomStatic =
-      GetShaderLocation(impl->colorShader, "u_customStatic");
-  impl->locGradientCenter =
-      GetShaderLocation(impl->colorShader, "u_gradientCenter");
-  impl->locGradientEdge =
-      GetShaderLocation(impl->colorShader, "u_gradientEdge");
-  impl->locGlobalBreath =
-      GetShaderLocation(impl->colorShader, "u_globalBreath");
-
-  // Cria a textura do ponto
-  Image img = GenImageColor(2, 2, WHITE);
-  impl->dot = LoadTextureFromImage(img);
-  UnloadImage(img);
-
-  // Configura a câmera
-  impl->camera = {0};
   impl->camera.target = {0.0f, 0.0f};
   impl->camera.offset = {(float)impl->centrox, (float)impl->centroy};
   impl->camera.rotation = 0.0f;
   impl->camera.zoom = 1.0f;
+
+  impl->InitGPU();
 }
 
 Renderer::~Renderer() {
-  UnloadShader(impl->colorShader);
-  UnloadTexture(impl->dot);
+  impl->FreeGPU();
   CloseWindow();
   delete impl;
 }
@@ -235,61 +264,97 @@ void Renderer::BeginFrame() {
 
 void Renderer::EndFrame() { ::EndDrawing(); }
 
-void Renderer::DrawScene(const std::vector<NumberPoint> &points,
-                         const GameState &state) {
-  if (points.empty() || state.currentLimit < 1.0f)
+void Renderer::SyncGPUData(const std::vector<NumberPoint> &points,
+                           bool fullReset) {
+  if (fullReset) {
+    impl->gpuSyncedCount = 0;
+  }
+
+  size_t currentCount = points.size();
+  if (currentCount == impl->gpuSyncedCount || points.empty())
     return;
 
-  // Updates camera based on gamestate
+  // If points exceed current GPU allocation, reallocate with 1.5x capacity
+  if (currentCount > impl->gpuAllocatedCapacity) {
+    size_t newCapacity =
+        std::max(currentCount, impl->gpuAllocatedCapacity * 3 / 2);
+
+    rlUnloadVertexBuffer(impl->vboId);
+    rlUnloadVertexArray(impl->vaoId);
+
+    impl->vaoId = rlLoadVertexArray();
+    rlEnableVertexArray(impl->vaoId);
+
+    impl->vboId = rlLoadVertexBuffer(
+        nullptr, (int)(newCapacity * sizeof(NumberPoint)), true);
+    rlSetVertexAttribute(0, 3, RL_FLOAT, false, sizeof(NumberPoint), 0);
+    rlEnableVertexAttribute(0);
+    rlDisableVertexArray();
+
+    rlUpdateVertexBuffer(impl->vboId, points.data(),
+                         (int)(currentCount * sizeof(NumberPoint)), 0);
+
+    impl->gpuAllocatedCapacity = newCapacity;
+    impl->gpuSyncedCount = currentCount;
+  } else {
+    // Incrementally upload only newly calculated points
+    size_t newElements = currentCount - impl->gpuSyncedCount;
+    size_t offsetBytes = impl->gpuSyncedCount * sizeof(NumberPoint);
+    const void *dataPtr = points.data() + impl->gpuSyncedCount;
+
+    rlUpdateVertexBuffer(impl->vboId, dataPtr,
+                         (int)(newElements * sizeof(NumberPoint)),
+                         (int)offsetBytes);
+    impl->gpuSyncedCount = currentCount;
+  }
+}
+
+void Renderer::DrawScene(const std::vector<NumberPoint> &points,
+                         GameState &state) {
+  int renderCount = static_cast<int>(state.currentLimit);
+  if (renderCount <= 0 || points.empty())
+    return;
+
+  renderCount = std::min(renderCount, static_cast<int>(points.size()));
+
   impl->camera.target.x = state.camera.x;
   impl->camera.target.y = state.camera.y;
   impl->camera.zoom = state.camera.zoom;
   impl->zoomMode = state.camera.zoomMode;
 
-  // Declares the variables useful for culling, color and render
-  renderContext ctx;
-  ctx.limitIdx = static_cast<int>(state.currentLimit);
+  // Auto-Camera Zoom calculation
+  if (impl->zoomMode == 0 || impl->zoomMode == 1) {
+    float maxRadius = points[renderCount - 1].p;
+    if (maxRadius > 0.0f) {
+      if (impl->zoomMode == 0)
+        impl->camera.zoom = ((float)impl->width / 2.0f) / (maxRadius * 0.9f);
+      else if (impl->zoomMode == 1)
+        impl->camera.zoom = ((float)impl->height / 2.0f) / (maxRadius * 1.1f);
 
-  if (ctx.limitIdx > 0 && (impl->zoomMode == 0 || impl->zoomMode == 1)) {
-    float maxRadius = static_cast<float>(points[ctx.limitIdx - 1].p);
-    if (impl->zoomMode == 0)
-      impl->camera.zoom = ((float)impl->width / 2.0f) / (maxRadius * 0.9f);
-    else if (impl->zoomMode == 1)
-      impl->camera.zoom = ((float)impl->height / 2.0f) / (maxRadius * 1.1f);
+      state.camera.zoom = impl->camera.zoom;
+    }
+  } else {
+    impl->camera.zoom = state.camera.zoom;
   }
+  // Flush Raylib's internal batch so ClearBackground() is drawn BEFORE our
+  // GPU calls
+  rlDrawRenderBatchActive();
 
-  // Calculates bounding box of camera for culling
-  Vector2 tl = GetScreenToWorld2D({0, 0}, impl->camera);
-  Vector2 br = GetScreenToWorld2D({(float)impl->width, (float)impl->height},
-                                  impl->camera);
+  // --- Compute Camera MVP Matrix ---
+  BeginMode2D(impl->camera);
 
-  ctx.minX = std::min(tl.x, br.x);
-  ctx.maxX = std::max(tl.x, br.x);
-  ctx.minY = std::min(tl.y, br.y);
-  ctx.maxY = std::max(tl.y, br.y);
+  Matrix matModelView = rlGetMatrixModelview();
+  Matrix matProjection = rlGetMatrixProjection();
+  Matrix matMVP = MatrixMultiply(matModelView, matProjection);
 
-  float cx = (ctx.minX > 0) ? ctx.minX : ((ctx.maxX < 0) ? ctx.maxX : 0);
-  float cy = (ctx.minY > 0) ? ctx.minY : ((ctx.maxY < 0) ? ctx.maxY : 0);
-  float rMin = std::sqrt(cx * cx + cy * cy);
+  // Activate Shader & Upload Uniforms
+  BeginShaderMode(impl->colorShader);
 
-  ctx.rMax =
-      std::sqrt(std::max(tl.x * tl.x + tl.y * tl.y, br.x * br.x + br.y * br.y));
+  constexpr float POINT_CUTOFF_ZOOM = 2.0f;
 
-  // Searches the first element that can be on screen
-  auto it = std::lower_bound(
-      points.begin(), points.begin() + ctx.limitIdx, rMin,
-      [](const NumberPoint &p, float val) { return p.p < val; });
-
-  // Sets the other variables
-  ctx.startIdx = std::distance(points.begin(), it);
-  ctx.dotScale = std::max(2.0f, 1.0f / impl->camera.zoom);
-  ctx.invMaxP = 1.0f / static_cast<float>(points[ctx.limitIdx - 1].p);
-  ctx.globalBreath =
-      ColorFromHSV(std::fmod(GetTime() * 50.0f, 360.0f), 0.7f, 1.0f);
-  ctx.step = (impl->zoomMode == 2 && ctx.limitIdx > 100000) ? 5 : 1;
-
-  // --- Send Uniforms to GPU Shader (Done ONCE per frame) ---
-  float maxP = static_cast<float>(points[ctx.limitIdx - 1].p);
+  // Send Uniforms to GPU
+  float pointSize = (impl->camera.zoom >= POINT_CUTOFF_ZOOM) ? 0.0f : 2.5f;
+  float maxP = points[renderCount - 1].p;
   int colorModeInt = static_cast<int>(state.colorMode);
   Vector4 cStatic = ColorNormalize(impl->customStatic);
   Vector4 cGradCenter = ColorNormalize(impl->customGradientCenter);
@@ -298,6 +363,9 @@ void Renderer::DrawScene(const std::vector<NumberPoint> &points,
       ColorFromHSV(std::fmod(GetTime() * 50.0f, 360.0f), 0.7f, 1.0f);
   Vector4 cBreath = ColorNormalize(breathCol);
 
+  SetShaderValueMatrix(impl->colorShader, impl->locMvp, matMVP);
+  SetShaderValue(impl->colorShader, impl->locPointSize, &pointSize,
+                 SHADER_UNIFORM_FLOAT);
   SetShaderValue(impl->colorShader, impl->locMaxP, &maxP, SHADER_UNIFORM_FLOAT);
   SetShaderValue(impl->colorShader, impl->locColorMode, &colorModeInt,
                  SHADER_UNIFORM_INT);
@@ -310,19 +378,25 @@ void Renderer::DrawScene(const std::vector<NumberPoint> &points,
   SetShaderValue(impl->colorShader, impl->locGlobalBreath, &cBreath,
                  SHADER_UNIFORM_VEC4);
 
-  // Starts 2D mode for drawing scene
-  BeginMode2D(impl->camera);
-  BeginShaderMode(impl->colorShader);
+  // --- Single GPU Draw Call ---
+  rlDisableBackfaceCulling();
+  rlEnableVertexArray(impl->vaoId);
 
-  // Chooses how to draw. Affects how culling is calculated
-  if (state.drawAsWeb)
-    impl->DrawWebMode(points, state, ctx);
-  else
-    impl->DrawPointsMode(points, state, ctx);
+  if (state.drawAsWeb) {
+    rlEnableWireMode();
+    rlDrawVertexArray(0, renderCount);
+    rlDisableWireMode();
+  } else {
+    rlEnablePointMode();
+    rlDrawVertexArray(0, renderCount);
+    rlDisableWireMode();
+  }
 
-  // Stops 2D mode to draw UI later
+  rlDisableVertexArray();
   EndShaderMode();
   EndMode2D();
+
+  impl->DrawPointLabels(points, renderCount, state, maxP, breathCol);
 }
 
 void Renderer::DrawUI(const std::vector<NumberPoint> &points,
@@ -330,7 +404,6 @@ void Renderer::DrawUI(const std::vector<NumberPoint> &points,
   if (state.showFPS)
     DrawFPS(impl->width - 100, 10);
 
-  // Desenha a mira (Cursor) no centro
   if (state.showCursor) {
     constexpr int TAM_BAR_X = 10;
     constexpr int TAM_BAR_Y = 8;
@@ -341,7 +414,6 @@ void Renderer::DrawUI(const std::vector<NumberPoint> &points,
                   TAM_BAR_Y, WHITE);
   }
 
-  // Painéis de Seleção de Cor do RayGui
   if (state.colorPickerVisible == 1) {
     GuiColorPicker((Rectangle){(float)impl->width - 250, 50, 200, 200},
                    "Pick a color", &impl->customStatic);
@@ -352,14 +424,12 @@ void Renderer::DrawUI(const std::vector<NumberPoint> &points,
                    "Edge Color", &impl->customGradientEdge);
   }
 
-  // Painel de Estatísticas
   if (state.showStats) {
-    unsigned long long primoAtual = 0;
+    uint64_t primoAtual = 0;
     int limitInt = static_cast<int>(state.currentLimit);
 
-    // Proteção para não acessar memória fora do vetor
-    if (limitInt > 0 && limitInt <= points.size()) {
-      primoAtual = points[limitInt - 1].p;
+    if (limitInt > 0 && limitInt <= static_cast<int>(points.size())) {
+      primoAtual = static_cast<uint64_t>(points[limitInt - 1].p);
     }
 
     DrawText(TextFormat("Numbers rendered: %.0f", state.currentLimit), 10, 10,
@@ -381,7 +451,6 @@ void Renderer::DrawUI(const std::vector<NumberPoint> &points,
     }
   }
 
-  // Painel de Controles
   if (state.showControls) {
     DrawText("Scroll wheel to adjust the zoom", 10, impl->height - 30, 20,
              WHITE);
@@ -401,8 +470,7 @@ void Renderer::DrawUI(const std::vector<NumberPoint> &points,
     DrawText("B to enter Benchmark Mode", 10, impl->height - 250, 20, WHITE);
   }
 
-  // Typing box
-  if (impl->isTyping) {
+  if (state.isTyping) {
     int boxX = impl->centrox - 150;
     int boxY = impl->centroy - 40;
     int boxWidth = 300;
@@ -412,11 +480,9 @@ void Renderer::DrawUI(const std::vector<NumberPoint> &points,
     DrawRectangleLines(boxX, boxY, boxWidth, boxHeight, RAYWHITE);
     DrawText("Jump to multiple of:", boxX + 20, boxY + 10, 20, GRAY);
 
-    // Efeito de cursor piscando usando o tempo da Raylib
     const char *cursor = (std::fmod(GetTime(), 1.0) < 0.5) ? "_" : "";
-    DrawText(TextFormat("%s%s", impl->inputBuffer, cursor), boxX + 20,
+    DrawText(TextFormat("%s%s", state.inputBuffer, cursor), boxX + 20,
              boxY + 40, 30, WHITE);
-
     DrawText("[Enter] Confirm [Esc] Cancel", boxX + 20, boxY + 80, 10, GRAY);
   }
 }

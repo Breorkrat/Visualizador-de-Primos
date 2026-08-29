@@ -17,10 +17,12 @@ public:
   void BeginFrame();
   void EndFrame();
 
+  // Sends points to GPU VRAM
+  void SyncGPUData(const std::vector<NumberPoint> &points, bool fullReset);
+
   // Isolated methods
   void DrawUI(const std::vector<NumberPoint> &points, const GameState &state);
-  void DrawScene(const std::vector<NumberPoint> &points,
-                 const GameState &state);
+  void DrawScene(const std::vector<NumberPoint> &points, GameState &state);
 
 private:
   struct Impl; // PIMPL to hide raylib

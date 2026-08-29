@@ -13,7 +13,7 @@ void NumberGenerator::AddPoint(uint64_t p) {
   NumberPoint pt;
   pt.x = static_cast<float>(r * std::cos(theta));
   pt.y = static_cast<float>(-r * std::sin(theta));
-  pt.p = static_cast<float>(p);
+  pt.p = static_cast<uint32_t>(p);
 
   points.push_back(pt);
 }

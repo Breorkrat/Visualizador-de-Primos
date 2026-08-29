@@ -7,7 +7,7 @@ export module math_logic;
 export struct NumberPoint {
   float x;
   float y;
-  float p;
+  uint32_t p;
 };
 
 export class NumberGenerator {
@@ -20,6 +20,8 @@ public:
 
   const std::vector<NumberPoint> &GetPoints() const { return points; }
   size_t Size() const { return points.size(); }
+
+  uint64_t GetLastChecked() const { return lastChecked; }
 
 private:
   void AddPoint(uint64_t p);
