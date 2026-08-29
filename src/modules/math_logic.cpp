@@ -13,7 +13,6 @@ void NumberGenerator::AddPoint(unsigned long long p) {
   pt.x = r * std::cos(theta);
   pt.y = -r * std::sin(theta);
   pt.p = p;
-  pt.hue = std::fmod(pt.p * 0.05f, 360.0f);
 
   points.push_back(pt); // adds to end of std::vector
 }

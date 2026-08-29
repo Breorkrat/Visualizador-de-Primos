@@ -11,6 +11,59 @@ module;
 #include <vector>
 module renderer;
 
+// --- GLSL 330 Shader ---
+static const char *COLOR_VS = R"(#version 330
+in vec3 vertexPosition;
+in vec2 vertexTexCoord; // We use vertexTexCoord.x to pass 'p'
+
+uniform mat4 mvp;
+uniform float u_maxP;
+uniform int u_colorMode;
+uniform vec4 u_customStatic;
+uniform vec4 u_gradientCenter;
+uniform vec4 u_gradientEdge;
+uniform vec4 u_globalBreath;
+
+out vec4 fragColor;
+
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+void main() {
+    gl_Position = mvp * vec4(vertexPosition, 1.0);
+
+    float pVal = vertexTexCoord.x;
+    float distRatio = (u_maxP > 0.0) ? clamp(pVal / u_maxP, 0.0, 1.0) : 0.0;
+
+    if (u_colorMode == 0) {
+        // Calculated Mode: Exact same HSV formula, now executed on GPU
+        float hue = mod(pVal * 0.05, 360.0) / 360.0;
+        fragColor = vec4(hsv2rgb(vec3(hue, 0.8, 1.0)), 1.0);
+    } else if (u_colorMode == 1) {
+        // Breathing Mode
+        fragColor = u_globalBreath;
+    } else if (u_colorMode == 2) {
+        // Custom Static
+        fragColor = u_customStatic;
+    } else {
+        // Custom Gradient Mode
+        fragColor = mix(u_gradientCenter, u_gradientEdge, distRatio);
+    }
+}
+)";
+
+static const char *COLOR_FS = R"(#version 330
+in vec4 fragColor;
+out vec4 finalColor;
+
+void main() {
+    finalColor = fragColor;
+}
+)";
+
 struct renderContext {
   int limitIdx, startIdx, step;
   float dotScale, invMaxP, rMax;
@@ -25,6 +78,15 @@ struct Renderer::Impl {
   int width, height, centrox, centroy;
   char zoomMode = 0; // 0: Cover, 1: Full, 2: Free
 
+  // Shader & Uniforms
+  Shader colorShader;
+  int locMaxP;
+  int locColorMode;
+  int locCustomStatic;
+  int locGradientCenter;
+  int locGradientEdge;
+  int locGlobalBreath;
+
   // Presets
   Color customStatic = RED;
   Color customGradientCenter = WHITE;
@@ -35,22 +97,7 @@ struct Renderer::Impl {
 
   const char *colorSchemeNames[4] = {"Calculated", "Breathing", "Custom Static",
                                      "Custom Gradient"};
-  Color GetPointColor(const NumberPoint &pt, const GameState &state,
-                      const renderContext &ctx) {
-    float distRatio = static_cast<float>(pt.p) * ctx.invMaxP;
 
-    switch (state.colorMode) {
-    case ColorMode::Calculated:
-      return ColorFromHSV(pt.hue, 0.8f, 1.0f);
-    case ColorMode::Breathing:
-      return ctx.globalBreath;
-    case ColorMode::CustomStatic:
-      return customStatic;
-    case ColorMode::CustomGradient:
-      return ColorLerp(customGradientCenter, customGradientEdge, distRatio);
-    }
-    return WHITE;
-  }
   void DrawPointsMode(const std::vector<NumberPoint> &points,
                       const GameState &state, const renderContext &ctx) {
     // Only draws squares if up close
@@ -88,9 +135,8 @@ struct Renderer::Impl {
 
       lastDrawnPos = pos;
 
-      // Gets the color of the current point
-      Color drawColor = GetPointColor(points[i], state, ctx);
-      rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+      // Send 'p' to the GPU shader via texcoord. Zero CPU color math!
+      rlTexCoord2f(static_cast<float>(points[i].p), 0.0f);
 
       if (isFarAway) {
         rlVertex2f(pos.x, pos.y);
@@ -119,8 +165,7 @@ struct Renderer::Impl {
                     (float)points[i + ctx.step].y};
 
       // Gets the color for the line
-      Color drawColor = GetPointColor(points[i], state, ctx);
-      rlColor4ub(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+      rlTexCoord2f(static_cast<float>(points[i].p), 0.0f);
 
       rlVertex2f(p1.x, p1.y);
       rlVertex2f(p2.x, p2.y);
@@ -130,7 +175,7 @@ struct Renderer::Impl {
 };
 
 Renderer::Renderer(int width, int height, const std::string &title) {
-  impl = new Impl(); // Aloca as informações privadas
+  impl = new Impl();
   impl->width = width;
   impl->height = height;
   impl->centrox = width / 2;
@@ -139,6 +184,19 @@ Renderer::Renderer(int width, int height, const std::string &title) {
   SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_RESIZABLE);
   InitWindow(width, height, title.c_str());
   SetTargetFPS(60);
+
+  // Load custom GPU Color Shader
+  impl->colorShader = LoadShaderFromMemory(COLOR_VS, COLOR_FS);
+  impl->locMaxP = GetShaderLocation(impl->colorShader, "u_maxP");
+  impl->locColorMode = GetShaderLocation(impl->colorShader, "u_colorMode");
+  impl->locCustomStatic =
+      GetShaderLocation(impl->colorShader, "u_customStatic");
+  impl->locGradientCenter =
+      GetShaderLocation(impl->colorShader, "u_gradientCenter");
+  impl->locGradientEdge =
+      GetShaderLocation(impl->colorShader, "u_gradientEdge");
+  impl->locGlobalBreath =
+      GetShaderLocation(impl->colorShader, "u_globalBreath");
 
   // Cria a textura do ponto
   Image img = GenImageColor(2, 2, WHITE);
@@ -154,9 +212,10 @@ Renderer::Renderer(int width, int height, const std::string &title) {
 }
 
 Renderer::~Renderer() {
+  UnloadShader(impl->colorShader);
   UnloadTexture(impl->dot);
   CloseWindow();
-  delete impl; // Limpa a memória
+  delete impl;
 }
 
 bool Renderer::WindowShouldClose() const { return ::WindowShouldClose(); }
@@ -229,16 +288,40 @@ void Renderer::DrawScene(const std::vector<NumberPoint> &points,
       ColorFromHSV(std::fmod(GetTime() * 50.0f, 360.0f), 0.7f, 1.0f);
   ctx.step = (impl->zoomMode == 2 && ctx.limitIdx > 100000) ? 5 : 1;
 
+  // --- Send Uniforms to GPU Shader (Done ONCE per frame) ---
+  float maxP = static_cast<float>(points[ctx.limitIdx - 1].p);
+  int colorModeInt = static_cast<int>(state.colorMode);
+  Vector4 cStatic = ColorNormalize(impl->customStatic);
+  Vector4 cGradCenter = ColorNormalize(impl->customGradientCenter);
+  Vector4 cGradEdge = ColorNormalize(impl->customGradientEdge);
+  Color breathCol =
+      ColorFromHSV(std::fmod(GetTime() * 50.0f, 360.0f), 0.7f, 1.0f);
+  Vector4 cBreath = ColorNormalize(breathCol);
+
+  SetShaderValue(impl->colorShader, impl->locMaxP, &maxP, SHADER_UNIFORM_FLOAT);
+  SetShaderValue(impl->colorShader, impl->locColorMode, &colorModeInt,
+                 SHADER_UNIFORM_INT);
+  SetShaderValue(impl->colorShader, impl->locCustomStatic, &cStatic,
+                 SHADER_UNIFORM_VEC4);
+  SetShaderValue(impl->colorShader, impl->locGradientCenter, &cGradCenter,
+                 SHADER_UNIFORM_VEC4);
+  SetShaderValue(impl->colorShader, impl->locGradientEdge, &cGradEdge,
+                 SHADER_UNIFORM_VEC4);
+  SetShaderValue(impl->colorShader, impl->locGlobalBreath, &cBreath,
+                 SHADER_UNIFORM_VEC4);
+
   // Starts 2D mode for drawing scene
   BeginMode2D(impl->camera);
+  BeginShaderMode(impl->colorShader);
 
-  // Chooses how to draw, affects how culling is calculated
+  // Chooses how to draw. Affects how culling is calculated
   if (state.drawAsWeb)
     impl->DrawWebMode(points, state, ctx);
   else
     impl->DrawPointsMode(points, state, ctx);
 
   // Stops 2D mode to draw UI later
+  EndShaderMode();
   EndMode2D();
 }
 

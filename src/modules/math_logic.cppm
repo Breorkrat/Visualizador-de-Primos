@@ -6,7 +6,6 @@ export module math_logic;
 export struct NumberPoint {
   double x, y;
   unsigned long long p;
-  float hue;
 };
 
 export class NumberGenerator {
