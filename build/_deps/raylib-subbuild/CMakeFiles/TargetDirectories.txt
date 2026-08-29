@@ -1,3 +1,0 @@
-/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/CMakeFiles/raylib-populate.dir
-/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/CMakeFiles/edit_cache.dir
-/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-subbuild/CMakeFiles/rebuild_cache.dir
