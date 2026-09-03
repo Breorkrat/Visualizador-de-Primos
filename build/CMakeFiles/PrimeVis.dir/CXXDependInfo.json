@@ -1,0 +1,185 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "",
+	"cxx-modules" : 
+	{
+		"CMakeFiles/PrimeVis.dir/src/modules/application.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"compile-features" : [],
+			"compile-options" : [],
+			"definitions" : 
+			[
+				"PLATFORM_DESKTOP",
+				"GRAPHICS_API_OPENGL_33"
+			],
+			"destination" : null,
+			"include-directories" : 
+			[
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
+			],
+			"name" : "CXX_MODULES",
+			"relative-directory" : "",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/application.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"compile-features" : [],
+			"compile-options" : [],
+			"definitions" : 
+			[
+				"PLATFORM_DESKTOP",
+				"GRAPHICS_API_OPENGL_33"
+			],
+			"destination" : null,
+			"include-directories" : 
+			[
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
+			],
+			"name" : "CXX_MODULES",
+			"relative-directory" : "",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/game_state.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/input.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"compile-features" : [],
+			"compile-options" : [],
+			"definitions" : 
+			[
+				"PLATFORM_DESKTOP",
+				"GRAPHICS_API_OPENGL_33"
+			],
+			"destination" : null,
+			"include-directories" : 
+			[
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
+			],
+			"name" : "CXX_MODULES",
+			"relative-directory" : "",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"compile-features" : [],
+			"compile-options" : [],
+			"definitions" : 
+			[
+				"PLATFORM_DESKTOP",
+				"GRAPHICS_API_OPENGL_33"
+			],
+			"destination" : null,
+			"include-directories" : 
+			[
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
+			],
+			"name" : "CXX_MODULES",
+			"relative-directory" : "",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/renderer.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"compile-features" : [],
+			"compile-options" : [],
+			"definitions" : 
+			[
+				"PLATFORM_DESKTOP",
+				"GRAPHICS_API_OPENGL_33"
+			],
+			"destination" : null,
+			"include-directories" : 
+			[
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
+			],
+			"name" : "CXX_MODULES",
+			"relative-directory" : "",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/renderer.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/shaders.cppm.o" : 
+		{
+			"bmi-only" : false,
+			"compile-features" : [],
+			"compile-options" : [],
+			"definitions" : 
+			[
+				"PLATFORM_DESKTOP",
+				"GRAPHICS_API_OPENGL_33"
+			],
+			"destination" : null,
+			"include-directories" : 
+			[
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raygui-src/src",
+				"/home/breorkrat/Apps/Prime-Visualizer-CPP/build/_deps/raylib-src/src"
+			],
+			"name" : "CXX_MODULES",
+			"relative-directory" : "",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/shaders.cppm",
+			"type" : "CXX_MODULES",
+			"visibility" : "PUBLIC"
+		}
+	},
+	"database-info" : null,
+	"dir-cur-bld" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build",
+	"dir-cur-src" : "/home/breorkrat/Apps/Prime-Visualizer-CPP",
+	"dir-top-bld" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build",
+	"dir-top-src" : "/home/breorkrat/Apps/Prime-Visualizer-CPP",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		"_deps/raylib-src/src",
+		"_deps/raygui-src/src"
+	],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build/CMakeFiles/PrimeVis.dir",
+	"sources" : 
+	{
+		"CMakeFiles/PrimeVis.dir/src/main.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/main.cpp"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/application.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/application.cpp"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/input.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/input.cpp"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/math_logic.cpp"
+		},
+		"CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/src/modules/renderer.cpp"
+		}
+	}
+}

@@ -1,9 +1,11 @@
 module;
+
+#define RAYGUI_IMPLEMENTATION
+
+#include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
-#define RAYGUI_IMPLEMENTATION
-#include <raygui.h>
 
 #include <algorithm>
 #include <cmath>
@@ -13,59 +15,7 @@ module;
 
 module renderer;
 
-// --- GLSL 330 Shader ---
-static const char *COLOR_VS = R"(#version 330
-layout(location = 0) in vec2 vertexPosition; // x, y
-
-uniform mat4 mvp;
-uniform float u_pointSize;
-uniform float u_maxP;
-uniform int u_colorMode;
-uniform vec4 u_customStatic;
-uniform vec4 u_gradientCenter;
-uniform vec4 u_gradientEdge;
-uniform vec4 u_globalBreath;
-
-out vec4 fragColor;
-
-vec3 hsv2rgb(vec3 c) {
-    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-
-void main() {
-    gl_Position = mvp * vec4(vertexPosition.xy, 0.0, 1.0);
-    gl_PointSize = u_pointSize;
-
-    float pVal = length(vertexPosition);
-    float distRatio = (u_maxP > 0.0) ? clamp(pVal / u_maxP, 0.0, 1.0) : 0.0;
-
-    if (u_colorMode == 0) {
-        // Calculated (HSV)
-        float hue = mod(pVal * 0.05, 360.0) / 360.0;
-        fragColor = vec4(hsv2rgb(vec3(hue, 0.8, 1.0)), 1.0);
-    } else if (u_colorMode == 1) {
-        // Breathing
-        fragColor = u_globalBreath;
-    } else if (u_colorMode == 2) {
-        // Custom Static
-        fragColor = u_customStatic;
-    } else {
-        // Custom Gradient
-        fragColor = mix(u_gradientCenter, u_gradientEdge, distRatio);
-    }
-}
-)";
-
-static const char *COLOR_FS = R"(#version 330
-in vec4 fragColor;
-out vec4 finalColor;
-
-void main() {
-    finalColor = fragColor;
-}
-)";
+import shaders;
 
 struct Renderer::Impl {
   Camera2D camera;
@@ -89,6 +39,8 @@ struct Renderer::Impl {
   int locGradientEdge;
   int locGlobalBreath;
 
+  int locTime;
+
   // Presets
   Color customStatic = RED;
   Color customGradientCenter = WHITE;
@@ -98,7 +50,7 @@ struct Renderer::Impl {
                                      "Custom Gradient"};
 
   void InitGPU() {
-    colorShader = LoadShaderFromMemory(COLOR_VS, COLOR_FS);
+    colorShader = LoadShaderFromMemory(SPIRAL_VS, SPIRAL_FS);
 
     locMvp = GetShaderLocation(colorShader, "mvp");
     locPointSize = GetShaderLocation(colorShader, "u_pointSize");
@@ -108,6 +60,8 @@ struct Renderer::Impl {
     locGradientCenter = GetShaderLocation(colorShader, "u_gradientCenter");
     locGradientEdge = GetShaderLocation(colorShader, "u_gradientEdge");
     locGlobalBreath = GetShaderLocation(colorShader, "u_globalBreath");
+
+    locTime = GetShaderLocation(colorShader, "u_time");
 
     // Initialize initial GPU buffer (capacity for 100k points, dynamically
     // grows)
@@ -377,6 +331,10 @@ void Renderer::DrawScene(const std::vector<NumberPoint> &points,
                  SHADER_UNIFORM_VEC4);
   SetShaderValue(impl->colorShader, impl->locGlobalBreath, &cBreath,
                  SHADER_UNIFORM_VEC4);
+
+  float currentTime = static_cast<float>(GetTime());
+  SetShaderValue(impl->colorShader, impl->locTime, &currentTime,
+                 SHADER_UNIFORM_FLOAT);
 
   // --- Single GPU Draw Call ---
   rlDisableBackfaceCulling();

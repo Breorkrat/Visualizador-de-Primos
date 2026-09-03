@@ -33,11 +33,11 @@ void InputManager::HandleContinuous(GameState &state) {
   // Manual Speed
   if (IsKeyDown(KEY_UP)) {
     state.ppsLock = true;
-    state.primesPerSecond += 50.0f;
+    state.primesPerSecond += 10.0f;
   }
   if (IsKeyDown(KEY_DOWN)) {
     state.ppsLock = true;
-    state.primesPerSecond = std::max(0.0f, state.primesPerSecond - 50.0f);
+    state.primesPerSecond -= 10.0f;
   }
 
   // Smooth Zoom Centered on Mouse Cursor
