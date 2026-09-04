@@ -1,0 +1,88 @@
+{
+	"modules" : 
+	{
+		"application" : 
+		{
+			"bmi" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/CMakeFiles/PrimeVis.dir/application.gcm",
+			"is-private" : false
+		},
+		"game_state" : 
+		{
+			"bmi" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/CMakeFiles/PrimeVis.dir/game_state.gcm",
+			"is-private" : false
+		},
+		"input" : 
+		{
+			"bmi" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/CMakeFiles/PrimeVis.dir/input.gcm",
+			"is-private" : false
+		},
+		"math_logic" : 
+		{
+			"bmi" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/CMakeFiles/PrimeVis.dir/math_logic.gcm",
+			"is-private" : false
+		},
+		"renderer" : 
+		{
+			"bmi" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/CMakeFiles/PrimeVis.dir/renderer.gcm",
+			"is-private" : false
+		},
+		"shaders" : 
+		{
+			"bmi" : "/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/CMakeFiles/PrimeVis.dir/shaders.gcm",
+			"is-private" : false
+		}
+	},
+	"references" : 
+	{
+		"application" : 
+		{
+			"lookup-method" : "by-name",
+			"path" : "CMakeFiles/PrimeVis.dir/application.gcm"
+		},
+		"game_state" : 
+		{
+			"lookup-method" : "by-name",
+			"path" : "CMakeFiles/PrimeVis.dir/game_state.gcm"
+		},
+		"input" : 
+		{
+			"lookup-method" : "by-name",
+			"path" : "CMakeFiles/PrimeVis.dir/input.gcm"
+		},
+		"math_logic" : 
+		{
+			"lookup-method" : "by-name",
+			"path" : "CMakeFiles/PrimeVis.dir/math_logic.gcm"
+		},
+		"renderer" : 
+		{
+			"lookup-method" : "by-name",
+			"path" : "CMakeFiles/PrimeVis.dir/renderer.gcm"
+		},
+		"shaders" : 
+		{
+			"lookup-method" : "by-name",
+			"path" : "CMakeFiles/PrimeVis.dir/shaders.gcm"
+		}
+	},
+	"usages" : 
+	{
+		"application" : 
+		[
+			"game_state",
+			"input",
+			"math_logic",
+			"renderer"
+		],
+		"input" : 
+		[
+			"game_state",
+			"math_logic"
+		],
+		"renderer" : 
+		[
+			"game_state",
+			"math_logic"
+		]
+	}
+}

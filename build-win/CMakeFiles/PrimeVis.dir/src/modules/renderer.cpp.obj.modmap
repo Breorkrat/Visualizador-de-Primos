@@ -1,0 +1,3 @@
+$root .
+renderer CMakeFiles/PrimeVis.dir/renderer.gcm
+shaders CMakeFiles/PrimeVis.dir/shaders.gcm

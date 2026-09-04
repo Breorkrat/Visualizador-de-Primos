@@ -24,6 +24,7 @@ uniform vec4 u_globalBreath;
 uniform int u_rippleEnabled;
 uniform float u_rippleSpeed;
 uniform float u_rippleIntensity;
+uniform float u_rippleDistFactor;
 
 out vec4 fragColor;
 
@@ -36,7 +37,7 @@ vec3 hsv2rgb(vec3 c) {
 vec2 applyRipple(vec2 pos, float dist, float time) {
     // Check enabled and prevent division by zero near center
     if (u_rippleEnabled == 0 || dist <= 0) return pos;
-    float wave = sin(dist * 0.005 - time * u_rippleSpeed);
+    float wave = sin(dist * u_rippleDistFactor - time * u_rippleSpeed);
     return pos + (pos / dist) * (wave * (dist * u_rippleIntensity));
 }
 

@@ -1,0 +1,17 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/PrimeVis.dir/src/modules/math_logic.cppm.obj",
+"provides": [
+{
+"logical-name": "math_logic",
+"is-interface": true
+}
+],
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}

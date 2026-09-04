@@ -1,0 +1,17 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/PrimeVis.dir/src/modules/game_state.cppm.obj",
+"provides": [
+{
+"logical-name": "game_state",
+"is-interface": true
+}
+],
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}

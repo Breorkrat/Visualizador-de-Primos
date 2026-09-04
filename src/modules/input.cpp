@@ -83,8 +83,8 @@ void InputManager::HandlePressed(GameState &state, NumberGenerator &generator) {
       if (key == KEY_F3)
         state.showStats = !state.showStats;
 
-      if (key == KEY_F12)
-        state.drawAsWeb = !state.drawAsWeb;
+      if (key == KEY_F11)
+        ToggleFullscreen();
 
       // F and R reset camera back to auto-fit view
       if (key == KEY_R) {
@@ -105,6 +105,9 @@ void InputManager::HandlePressed(GameState &state, NumberGenerator &generator) {
       if (key == KEY_TAB) {
         state.showSideMenu = !state.showSideMenu;
       }
+
+      if (key == KEY_F12)
+        state.drawAsWeb = !state.drawAsWeb;
 
       if (key == KEY_ENTER && !state.isTyping) {
         if (!state.ppsLock) {

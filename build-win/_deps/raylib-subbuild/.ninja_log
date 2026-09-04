@@ -1,0 +1,21 @@
+# ninja log v7
+1	14	1788485063462613554	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir	12aab1ee841ffa41
+1	14	1788485063462613554	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir	12aab1ee841ffa41
+14	12447	1788485075894847363	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download	db83844296afa67a
+14	12447	1788485075894847363	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download	db83844296afa67a
+12447	12461	1788485075909847646	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update	f23a9b7959e08361
+12447	12461	1788485075909847646	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update	f23a9b7959e08361
+12461	12475	1788485075922847890	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch	520c050e6ceaf78a
+12461	12475	1788485075922847890	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch	520c050e6ceaf78a
+12475	12489	1788485075936848153	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure	17ed831577d4f979
+12475	12489	1788485075936848153	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure	17ed831577d4f979
+12489	12503	1788485075951848435	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build	b6d7f2e2291fbbb9
+12489	12503	1788485075951848435	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build	b6d7f2e2291fbbb9
+12503	12518	1788485075965848699	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install	eb9762555d71ccdd
+12503	12518	1788485075965848699	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install	eb9762555d71ccdd
+12518	12533	1788485075980848981	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test	9bb74b015cd4d899
+12518	12533	1788485075980848981	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test	9bb74b015cd4d899
+12533	12554	1788485076001849376	CMakeFiles/raylib-populate-complete	ecc8b7e4703ccaef
+12533	12554	1788485076001849376	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done	ecc8b7e4703ccaef
+12533	12554	1788485076001849376	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/CMakeFiles/raylib-populate-complete	ecc8b7e4703ccaef
+12533	12554	1788485076001849376	/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done	ecc8b7e4703ccaef

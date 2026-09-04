@@ -1,0 +1,32 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/PrimeVis.dir/src/modules/application.cppm.obj",
+"provides": [
+{
+"logical-name": "application",
+"is-interface": true
+}
+],
+"requires": [
+{
+"logical-name": "input"
+}
+,
+{
+"logical-name": "math_logic"
+}
+,
+{
+"logical-name": "game_state"
+}
+,
+{
+"logical-name": "renderer"
+}
+]
+}
+],
+"version": 0,
+"revision": 0
+}

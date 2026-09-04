@@ -16,6 +16,7 @@ export struct VisualSettings {
   float rippleIntensity = 0.08f;
   float breathSpeed = 50.0f;
   float pointSize = 2.5f;
+  float rippleDistFactor = 0.005f;
   int webShapeSides = 0;
 };
 

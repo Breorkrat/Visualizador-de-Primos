@@ -1,0 +1,14 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/PrimeVis.dir/src/modules/input.cpp.obj",
+"requires": [
+{
+"logical-name": "input"
+}
+]
+}
+],
+"version": 0,
+"revision": 0
+}

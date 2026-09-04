@@ -1,0 +1,6 @@
+$root .
+application CMakeFiles/PrimeVis.dir/application.gcm
+input CMakeFiles/PrimeVis.dir/input.gcm
+math_logic CMakeFiles/PrimeVis.dir/math_logic.gcm
+game_state CMakeFiles/PrimeVis.dir/game_state.gcm
+renderer CMakeFiles/PrimeVis.dir/renderer.gcm

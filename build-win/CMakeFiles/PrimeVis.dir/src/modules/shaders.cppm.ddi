@@ -1,0 +1,17 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/PrimeVis.dir/src/modules/shaders.cppm.o",
+"provides": [
+{
+"logical-name": "shaders",
+"is-interface": true
+}
+],
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}

@@ -1,0 +1,18 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/PrimeVis.dir/src/modules/renderer.cpp.o",
+"requires": [
+{
+"logical-name": "renderer"
+}
+,
+{
+"logical-name": "shaders"
+}
+]
+}
+],
+"version": 0,
+"revision": 0
+}

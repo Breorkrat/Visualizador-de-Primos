@@ -2,7 +2,7 @@ module;
 
 #define RAYGUI_IMPLEMENTATION
 
-#include <GL/gl.h>
+// #include <GL/gl.h>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -17,6 +17,24 @@ module;
 module renderer;
 
 import shaders;
+
+// --- OpenGL Constants (Safe from Windows.h collisions) ---
+#ifndef GL_LINES
+#define GL_LINES 0x0001
+#endif
+#ifndef GL_LINE_STRIP
+#define GL_LINE_STRIP 0x0003
+#endif
+#ifndef GL_TRIANGLES
+#define GL_TRIANGLES 0x0004
+#endif
+#ifndef GL_UNSIGNED_INT
+#define GL_UNSIGNED_INT 0x1405
+#endif
+
+extern "C" void glDrawArrays(unsigned int mode, int first, int count);
+extern "C" void glDrawElements(unsigned int mode, int count, unsigned int type,
+                               const void *indices);
 
 struct Renderer::Impl {
   Camera2D camera;
@@ -46,6 +64,7 @@ struct Renderer::Impl {
   int locRippleEnabled;
   int locRippleSpeed;
   int locRippleIntensity;
+  int locRippleDistFactor;
 
   // Presets
   Color customStatic = RED;
@@ -99,6 +118,7 @@ struct Renderer::Impl {
     locRippleEnabled = GetShaderLocation(colorShader, "u_rippleEnabled");
     locRippleSpeed = GetShaderLocation(colorShader, "u_rippleSpeed");
     locRippleIntensity = GetShaderLocation(colorShader, "u_rippleIntensity");
+    locRippleDistFactor = GetShaderLocation(colorShader, "u_rippleDistFactor");
 
     // Initialize initial GPU buffer (capacity for 100k points, dynamically
     // grows)
@@ -278,6 +298,14 @@ struct Renderer::Impl {
       cy += 20;
       GuiSliderBar({menuX + 15, cy, 220, 18}, "", "",
                    &state.visuals.rippleIntensity, 0.0f, 0.3f);
+      cy += 35;
+
+      GuiLabel({menuX + 15, cy, 200, 20},
+               TextFormat("Ripple Distance Scaling: %.4f",
+                          state.visuals.rippleDistFactor));
+      cy += 20;
+      GuiSliderBar({menuX + 15, cy, 220, 18}, "", "",
+                   &state.visuals.rippleDistFactor, 0.0f, 0.01f);
       cy += 35;
 
       GuiLabel({menuX + 15, cy, 200, 20},
@@ -609,6 +637,8 @@ void Renderer::DrawScene(const std::vector<NumberPoint> &points,
                  &state.visuals.rippleSpeed, SHADER_UNIFORM_FLOAT);
   SetShaderValue(impl->colorShader, impl->locRippleIntensity,
                  &state.visuals.rippleIntensity, SHADER_UNIFORM_FLOAT);
+  SetShaderValue(impl->colorShader, impl->locRippleDistFactor,
+                 &state.visuals.rippleDistFactor, SHADER_UNIFORM_FLOAT);
 
   // --- Single GPU Draw Call ---
   rlDisableBackfaceCulling();

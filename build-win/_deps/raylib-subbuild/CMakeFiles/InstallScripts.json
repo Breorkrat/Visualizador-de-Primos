@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/breorkrat/Apps/Prime-Visualizer-CPP/build-win/_deps/raylib-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

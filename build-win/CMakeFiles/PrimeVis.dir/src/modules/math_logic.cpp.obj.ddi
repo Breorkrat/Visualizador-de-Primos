@@ -1,0 +1,14 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/PrimeVis.dir/src/modules/math_logic.cpp.obj",
+"requires": [
+{
+"logical-name": "math_logic"
+}
+]
+}
+],
+"version": 0,
+"revision": 0
+}
