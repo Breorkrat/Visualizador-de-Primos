@@ -103,7 +103,7 @@ void InputManager::HandlePressed(GameState &state, NumberGenerator &generator) {
             static_cast<ColorMode>((static_cast<int>(state.colorMode) + 1) % 4);
 
       if (key == KEY_TAB) {
-        state.colorPickerVisible = (state.colorPickerVisible + 1) % 3;
+        state.showSideMenu = !state.showSideMenu;
       }
 
       if (key == KEY_ENTER && !state.isTyping) {

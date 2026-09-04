@@ -2,6 +2,7 @@ module;
 
 #define RAYGUI_IMPLEMENTATION
 
+#include <GL/gl.h>
 #include <raygui.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -25,12 +26,15 @@ struct Renderer::Impl {
   // GPU Buffer State
   unsigned int vaoId = 0;
   unsigned int vboId = 0;
+  unsigned int ngonEboId = 0;
   size_t gpuAllocatedCapacity = 0;
   size_t gpuSyncedCount = 0;
+  int currentEboN = 0;
 
   // Shader & Uniform Locations
   Shader colorShader;
   int locMvp;
+  int locTime;
   int locPointSize;
   int locMaxP;
   int locColorMode;
@@ -39,7 +43,9 @@ struct Renderer::Impl {
   int locGradientEdge;
   int locGlobalBreath;
 
-  int locTime;
+  int locRippleEnabled;
+  int locRippleSpeed;
+  int locRippleIntensity;
 
   // Presets
   Color customStatic = RED;
@@ -49,10 +55,39 @@ struct Renderer::Impl {
   const char *colorSchemeNames[4] = {"Calculated", "Breathing", "Custom Static",
                                      "Custom Gradient"};
 
+  // Helper for closing shapes of size n
+  void GenerateNgonIndices(size_t maxVertices, int N) {
+    if (N < 3)
+      return;
+    if (ngonEboId > 0) {
+      rlUnloadVertexBuffer(ngonEboId);
+    }
+
+    size_t numShapes = maxVertices / N;
+    std::vector<unsigned int> indices;
+    indices.reserve(numShapes * 2 * N);
+
+    for (unsigned int i = 0; i + (N - 1) < maxVertices; i += N) {
+      // Connect vertices: i -> i+1 -> i+2 ... -> i+(N-1)
+      for (int k = 0; k < N - 1; ++k) {
+        indices.push_back(i + k);
+        indices.push_back(i + k + 1);
+      }
+      // Close the loop: i+(N-1) -> i
+      indices.push_back(i + (N - 1));
+      indices.push_back(i);
+    }
+
+    ngonEboId = rlLoadVertexBufferElement(
+        indices.data(), (int)(indices.size() * sizeof(unsigned int)), false);
+    currentEboN = N;
+  }
+
   void InitGPU() {
     colorShader = LoadShaderFromMemory(SPIRAL_VS, SPIRAL_FS);
 
     locMvp = GetShaderLocation(colorShader, "mvp");
+    locTime = GetShaderLocation(colorShader, "u_time");
     locPointSize = GetShaderLocation(colorShader, "u_pointSize");
     locMaxP = GetShaderLocation(colorShader, "u_maxP");
     locColorMode = GetShaderLocation(colorShader, "u_colorMode");
@@ -61,7 +96,9 @@ struct Renderer::Impl {
     locGradientEdge = GetShaderLocation(colorShader, "u_gradientEdge");
     locGlobalBreath = GetShaderLocation(colorShader, "u_globalBreath");
 
-    locTime = GetShaderLocation(colorShader, "u_time");
+    locRippleEnabled = GetShaderLocation(colorShader, "u_rippleEnabled");
+    locRippleSpeed = GetShaderLocation(colorShader, "u_rippleSpeed");
+    locRippleIntensity = GetShaderLocation(colorShader, "u_rippleIntensity");
 
     // Initialize initial GPU buffer (capacity for 100k points, dynamically
     // grows)
@@ -77,12 +114,16 @@ struct Renderer::Impl {
     rlEnableVertexAttribute(0);
 
     rlDisableVertexArray();
+
+    GenerateNgonIndices(gpuAllocatedCapacity, 3);
   }
 
   void FreeGPU() {
     UnloadShader(colorShader);
     if (vboId > 0)
       rlUnloadVertexBuffer(vboId);
+    if (ngonEboId > 0)
+      rlUnloadVertexBuffer(ngonEboId);
     if (vaoId > 0)
       rlUnloadVertexArray(vaoId);
   }
@@ -174,6 +215,228 @@ struct Renderer::Impl {
       }
     }
   }
+  void DrawSideMenu(GameState &state) {
+    if (!state.showSideMenu) {
+      // Floating button in top-right corner when closed
+      if (GuiButton({(float)width - 110, 10, 100, 30}, "#141# Settings")) {
+        state.showSideMenu = true;
+      }
+      return;
+    }
+
+    float menuWidth = 340.0f;
+    float menuX = (float)width - menuWidth - 10.0f;
+    float menuY = 10.0f;
+    float menuHeight = (float)height - 20.0f;
+
+    // Dark semi-transparent background panel
+    DrawRectangle((int)menuX, (int)menuY, (int)menuWidth, (int)menuHeight,
+                  Fade(BLACK, 0.88f));
+    DrawRectangleLines((int)menuX, (int)menuY, (int)menuWidth, (int)menuHeight,
+                       DARKGRAY);
+
+    // Title Bar & Close Button
+    DrawText("SETTINGS [TAB to Close]", (int)menuX + 15, (int)menuY + 12, 18,
+             RAYWHITE);
+    if (GuiButton({menuX + menuWidth - 35, menuY + 8, 25, 25}, "X")) {
+      state.showSideMenu = false;
+    }
+
+    // Category Tabs Bar
+    float tabY = menuY + 45;
+    if (GuiButton({menuX + 10, tabY, 70, 26}, "Visuals"))
+      state.activeMenuTab = MenuTab::Visuals;
+    if (GuiButton({menuX + 85, tabY, 70, 26}, "Colors"))
+      state.activeMenuTab = MenuTab::Colors;
+    if (GuiButton({menuX + 160, tabY, 80, 26}, "Sim"))
+      state.activeMenuTab = MenuTab::Simulation;
+    if (GuiButton({menuX + 245, tabY, 85, 26}, "HUD"))
+      state.activeMenuTab = MenuTab::HUD;
+
+    DrawLine((int)menuX + 10, (int)tabY + 32, (int)menuX + (int)menuWidth - 10,
+             (int)tabY + 32, GRAY);
+
+    float cy = tabY + 45;
+
+    // --- Active Tab Content Dispatch ---
+    switch (state.activeMenuTab) {
+    case MenuTab::Visuals: {
+      GuiCheckBox({menuX + 15, cy, 20, 20}, "Enable Ripple Wave",
+                  &state.visuals.rippleEnabled);
+      cy += 35;
+
+      GuiLabel({menuX + 15, cy, 200, 20},
+               TextFormat("Ripple Speed: %.1f", state.visuals.rippleSpeed));
+      cy += 20;
+      GuiSliderBar({menuX + 15, cy, 220, 18}, "", "",
+                   &state.visuals.rippleSpeed, 0.0f, 15.0f);
+      cy += 30;
+
+      GuiLabel(
+          {menuX + 15, cy, 200, 20},
+          TextFormat("Ripple Intensity: %.3f", state.visuals.rippleIntensity));
+      cy += 20;
+      GuiSliderBar({menuX + 15, cy, 220, 18}, "", "",
+                   &state.visuals.rippleIntensity, 0.0f, 0.3f);
+      cy += 35;
+
+      GuiLabel({menuX + 15, cy, 200, 20},
+               TextFormat("Breathing Speed: %.1f", state.visuals.breathSpeed));
+      cy += 20;
+      GuiSliderBar({menuX + 15, cy, 220, 18}, "", "",
+                   &state.visuals.breathSpeed, 5.0f, 150.0f);
+      cy += 35;
+
+      GuiLabel({menuX + 15, cy, 200, 20},
+               TextFormat("Base Point Size: %.1f px", state.visuals.pointSize));
+      cy += 20;
+      GuiSliderBar({menuX + 15, cy, 220, 18}, "", "", &state.visuals.pointSize,
+                   1.0f, 8.0f);
+      break;
+    }
+
+    case MenuTab::Colors: {
+      DrawText("Color Mode:", (int)menuX + 15, (int)cy, 16, RAYWHITE);
+      cy += 25;
+
+      if (GuiButton({menuX + 15, cy, 145, 26}, "Calculated (HSV)"))
+        state.colorMode = ColorMode::Calculated;
+      if (GuiButton({menuX + 165, cy, 145, 26}, "Breathing"))
+        state.colorMode = ColorMode::Breathing;
+      cy += 32;
+      if (GuiButton({menuX + 15, cy, 145, 26}, "Custom Static"))
+        state.colorMode = ColorMode::CustomStatic;
+      if (GuiButton({menuX + 165, cy, 145, 26}, "Custom Gradient"))
+        state.colorMode = ColorMode::CustomGradient;
+      cy += 40;
+
+      switch (state.colorMode) {
+      case ColorMode::CustomStatic:
+        DrawText("Static Color Picker:", (int)menuX + 15, (int)cy, 14, GRAY);
+        cy += 20;
+        GuiColorPicker({menuX + 40, cy, 180, 180}, "Pick Color", &customStatic);
+        break;
+
+      case ColorMode::CustomGradient:
+        DrawText("Center Color:", (int)menuX + 15, (int)cy, 14, GRAY);
+        cy += 18;
+        GuiColorPicker({menuX + 40, cy, 120, 120}, "Center",
+                       &customGradientCenter);
+        cy += 135;
+        DrawText("Edge Color:", (int)menuX + 15, (int)cy, 14, GRAY);
+        cy += 18;
+        GuiColorPicker({menuX + 40, cy, 120, 120}, "Edge", &customGradientEdge);
+        break;
+
+      default:
+        break;
+      }
+      break;
+    }
+
+    case MenuTab::Simulation: {
+      GuiLabel({menuX + 15, cy, 200, 20},
+               TextFormat("Primes/Sec: %.0f", state.primesPerSecond));
+      cy += 20;
+
+      // Only lock PPS when the user actually drags the slider
+      if (GuiSliderBar({menuX + 15, cy, 220, 18}, "", "",
+                       &state.primesPerSecond, 0.0f, 10000.0f)) {
+        state.ppsLock = true;
+      }
+      cy += 35;
+
+      GuiCheckBox({menuX + 15, cy, 20, 20}, "Lock PPS (Manual Speed)",
+                  &state.ppsLock);
+      cy += 35;
+
+      DrawText(TextFormat("Current Divisor: %u", state.divMode),
+               (int)menuX + 15, (int)cy, 16, RAYWHITE);
+      cy += 25;
+      break;
+    }
+
+    case MenuTab::HUD: {
+      GuiCheckBox({menuX + 15, cy, 20, 20}, "Show FPS", &state.showFPS);
+      cy += 30;
+      GuiCheckBox({menuX + 15, cy, 20, 20}, "Show Statistics Panel",
+                  &state.showStats);
+      cy += 30;
+      GuiCheckBox({menuX + 15, cy, 20, 20}, "Show Center Crosshair",
+                  &state.showCursor);
+      cy += 30;
+      GuiCheckBox({menuX + 15, cy, 20, 20}, "Render Web (Lines)",
+                  &state.drawAsWeb);
+      cy += 30;
+
+      if (state.drawAsWeb) {
+        const char *shapeName = "Custom N-gon";
+        if (state.visuals.webShapeSides <= 0)
+          shapeName = "Continuous Line (0)";
+        else if (state.visuals.webShapeSides == 2)
+          shapeName = "Disjoint Pairs (2)";
+        else if (state.visuals.webShapeSides == 3)
+          shapeName = "Triangles (3)";
+        else if (state.visuals.webShapeSides == 4)
+          shapeName = "Quads (4)";
+        else if (state.visuals.webShapeSides == 5)
+          shapeName = "Pentagons (5)";
+        else if (state.visuals.webShapeSides == 6)
+          shapeName = "Hexagons (6)";
+        else if (state.visuals.webShapeSides == 8)
+          shapeName = "Octagons (8)";
+
+        DrawText(TextFormat("Shape: %s", shapeName), (int)menuX + 15, (int)cy,
+                 14, RAYWHITE);
+        cy += 20;
+
+        // Quick Preset Buttons
+        if (GuiButton({menuX + 15, cy, 65, 24}, "Line (0)"))
+          state.visuals.webShapeSides = 0;
+        if (GuiButton({menuX + 85, cy, 65, 24}, "Pairs (2)"))
+          state.visuals.webShapeSides = 2;
+        if (GuiButton({menuX + 155, cy, 65, 24}, "Tris (3)"))
+          state.visuals.webShapeSides = 3;
+        if (GuiButton({menuX + 225, cy, 65, 24}, "Quads (4)"))
+          state.visuals.webShapeSides = 4;
+        cy += 30;
+
+        // Interactive N Slider (only updates when dragged)
+        float nFloat = (float)std::max(3, state.visuals.webShapeSides);
+        float prevN = nFloat;
+
+        GuiLabel({menuX + 15, cy, 200, 20},
+                 TextFormat("Polygon Sides (N): %d",
+                            (state.visuals.webShapeSides < 3)
+                                ? 3
+                                : state.visuals.webShapeSides));
+        cy += 20;
+
+        GuiSliderBar({menuX + 15, cy, 220, 18}, "", "", &nFloat, 3.0f, 16.0f);
+
+        // Only update if the user interacted with the slider
+        if (std::abs(nFloat - prevN) > 0.001f) {
+          state.visuals.webShapeSides = (int)std::round(nFloat);
+        }
+        cy += 35;
+      }
+
+      DrawText("Camera Presets:", (int)menuX + 15, (int)cy, 16, RAYWHITE);
+      cy += 25;
+      if (GuiButton({menuX + 15, cy, 120, 28}, "Fit Cover (R)")) {
+        state.camera.zoomMode = 0;
+        state.camera.x = 0.0f;
+        state.camera.y = 0.0f;
+      }
+      if (GuiButton({menuX + 145, cy, 120, 28}, "Fit Full (F)")) {
+        state.camera.zoomMode = 1;
+        state.camera.x = 0.0f;
+        state.camera.y = 0.0f;
+      }
+      break;
+    }
+    }
+  }
 };
 
 Renderer::Renderer(int width, int height, const std::string &title) {
@@ -250,6 +513,10 @@ void Renderer::SyncGPUData(const std::vector<NumberPoint> &points,
 
     impl->gpuAllocatedCapacity = newCapacity;
     impl->gpuSyncedCount = currentCount;
+
+    if (impl->currentEboN >= 3) {
+      impl->GenerateNgonIndices(newCapacity, impl->currentEboN);
+    }
   } else {
     // Incrementally upload only newly calculated points
     size_t newElements = currentCount - impl->gpuSyncedCount;
@@ -333,23 +600,45 @@ void Renderer::DrawScene(const std::vector<NumberPoint> &points,
                  SHADER_UNIFORM_VEC4);
 
   float currentTime = static_cast<float>(GetTime());
+  int rippleEnabledInt = state.visuals.rippleEnabled ? 1 : 0;
   SetShaderValue(impl->colorShader, impl->locTime, &currentTime,
                  SHADER_UNIFORM_FLOAT);
+  SetShaderValue(impl->colorShader, impl->locRippleEnabled, &rippleEnabledInt,
+                 SHADER_UNIFORM_INT);
+  SetShaderValue(impl->colorShader, impl->locRippleSpeed,
+                 &state.visuals.rippleSpeed, SHADER_UNIFORM_FLOAT);
+  SetShaderValue(impl->colorShader, impl->locRippleIntensity,
+                 &state.visuals.rippleIntensity, SHADER_UNIFORM_FLOAT);
 
   // --- Single GPU Draw Call ---
   rlDisableBackfaceCulling();
   rlEnableVertexArray(impl->vaoId);
 
   if (state.drawAsWeb) {
-    rlEnableWireMode();
-    rlDrawVertexArray(0, renderCount);
-    rlDisableWireMode();
+    int N = state.visuals.webShapeSides;
+    if (N <= 0) {
+      glDrawArrays(GL_LINE_STRIP, 0, renderCount);
+    } else if (N == 2) {
+      glDrawArrays(GL_LINES, 0, renderCount);
+    } else {
+      if (N != impl->currentEboN) {
+        impl->GenerateNgonIndices(impl->gpuAllocatedCapacity, N);
+      }
+
+      int numShapes = renderCount / N;
+      int indexCount = numShapes * 2 * N;
+
+      if (indexCount > 0) {
+        rlEnableVertexBufferElement(impl->ngonEboId);
+        glDrawElements(GL_LINES, indexCount, GL_UNSIGNED_INT, 0);
+        rlDisableVertexBufferElement();
+      }
+    }
   } else {
     rlEnablePointMode();
     rlDrawVertexArray(0, renderCount);
     rlDisableWireMode();
   }
-
   rlDisableVertexArray();
   EndShaderMode();
   EndMode2D();
@@ -358,7 +647,9 @@ void Renderer::DrawScene(const std::vector<NumberPoint> &points,
 }
 
 void Renderer::DrawUI(const std::vector<NumberPoint> &points,
-                      const GameState &state) {
+                      GameState &state) {
+  impl->DrawSideMenu(state);
+
   if (state.showFPS)
     DrawFPS(impl->width - 100, 10);
 
@@ -370,16 +661,6 @@ void Renderer::DrawUI(const std::vector<NumberPoint> &points,
                   BAR_THICKNESS, WHITE);
     DrawRectangle(impl->centrox, impl->centroy - (TAM_BAR_Y / 2), BAR_THICKNESS,
                   TAM_BAR_Y, WHITE);
-  }
-
-  if (state.colorPickerVisible == 1) {
-    GuiColorPicker((Rectangle){(float)impl->width - 250, 50, 200, 200},
-                   "Pick a color", &impl->customStatic);
-  } else if (state.colorPickerVisible == 2) {
-    GuiColorPicker((Rectangle){(float)impl->width - 250, 50, 200, 200},
-                   "Center Color", &impl->customGradientCenter);
-    GuiColorPicker((Rectangle){(float)impl->width - 250, 300, 200, 200},
-                   "Edge Color", &impl->customGradientEdge);
   }
 
   if (state.showStats) {

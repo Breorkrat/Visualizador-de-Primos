@@ -21,7 +21,7 @@ public:
   void SyncGPUData(const std::vector<NumberPoint> &points, bool fullReset);
 
   // Isolated methods
-  void DrawUI(const std::vector<NumberPoint> &points, const GameState &state);
+  void DrawUI(const std::vector<NumberPoint> &points, GameState &state);
   void DrawScene(const std::vector<NumberPoint> &points, GameState &state);
 
 private:

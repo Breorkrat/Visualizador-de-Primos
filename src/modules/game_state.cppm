@@ -1,11 +1,22 @@
 module;
 export module game_state;
 
-export enum class ColorMode {
+export enum class MenuTab : int { Visuals, Colors, Simulation, HUD };
+
+export enum class ColorMode : int {
   Calculated,
   Breathing,
   CustomStatic,
   CustomGradient
+};
+
+export struct VisualSettings {
+  bool rippleEnabled = false;
+  float rippleSpeed = 4.0f;
+  float rippleIntensity = 0.08f;
+  float breathSpeed = 50.0f;
+  float pointSize = 2.5f;
+  int webShapeSides = 0;
 };
 
 export struct CameraState {
@@ -22,15 +33,20 @@ export struct GameState {
   bool benchmarkMode = false;
 
   unsigned int divMode = 0;
-  ColorMode colorMode = ColorMode::Breathing;
+  ColorMode colorMode = ColorMode::Calculated;
 
+  // HUD Visiblity
   bool showStats = true;
-  bool showControls = true;
-  bool showFPS = false;
+  bool showControls = false;
+  bool showFPS = true;
   bool showCursor = false;
   bool drawAsWeb = false;
-  int colorPickerVisible = 0; // 0 = Hidden, 1 = Solid, 2 = Gradient
 
+  // Slide menu
+  bool showSideMenu = false;
+  MenuTab activeMenuTab = MenuTab::Visuals;
+
+  VisualSettings visuals;
   CameraState camera;
 
   char inputBuffer[16] = {0};

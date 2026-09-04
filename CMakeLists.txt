@@ -15,6 +15,8 @@ FetchContent_MakeAvailable(raylib)
 # Raygui 4.0
 FetchContent_Declare(raygui URL https://github.com/raysan5/raygui/archive/refs/tags/4.0.tar.gz)
 FetchContent_MakeAvailable(raygui)
+#find_package(raylib REQUIRED)
+#find_package(raygui REQUIRED)
 
 # Fetch .cppm files
 file(GLOB_RECURSE MODULE_FILES CONFIGURE_DEPENDS "src/modules/*.cppm")
